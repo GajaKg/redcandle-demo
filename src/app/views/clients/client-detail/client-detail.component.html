@@ -1,0 +1,190 @@
+<div class="row grid gap-4">
+  <app-card>
+    <h6 class="!mb-6 text-xl font-bold">{{ selectedClient()?.name }}</h6>
+    <p>Adresa: {{ selectedClient()?.address }}</p>
+    <p>Telefon: {{ selectedClient()?.contact }}</p>
+    <p>Napomena: {{ selectedClient()?.note || "/" }}</p>
+  </app-card>
+</div>
+<div class="row grid grid-flow-col justify-stretch gap-4">
+  <app-card>
+    <app-title-card>Dodaj porudžbenicu</app-title-card>
+    <div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="flex flex-col">
+          <div class="flex gap-4">
+            <mat-form-field class="w-1/2">
+              <mat-label>Proizvod</mat-label>
+              <select formControlName="product" matNativeControl required>
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+              </select>
+            </mat-form-field>
+
+            <mat-form-field class="w-1/2">
+              <mat-label>Količina</mat-label>
+              <input formControlName="quantity" matInput value="" />
+            </mat-form-field>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-1/2">
+              <mat-slide-toggle>Plaćeno</mat-slide-toggle>
+            </div>
+            <mat-form-field class="w-1/2">
+              <mat-label>Napomena</mat-label>
+              <input formControlName="note" matInput value="" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <mat-form-field class="w-1/2">
+            <mat-label>Datum unosa</mat-label>
+            <input
+              formControlName="date"
+              matInput
+              [matDatepicker]="date"
+              [formControl]="today"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="date"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #date></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="w-1/2">
+            <mat-label>Datum dostave</mat-label>
+            <input
+              formControlName="dateDelivery"
+              matInput
+              [matDatepicker]="dateDelivery"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="dateDelivery"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #dateDelivery></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <button mat-flat-button type="submit">Potvrdi</button>
+      </form>
+    </div>
+  </app-card>
+  <app-card>
+    <app-title-card>Naručeno po mesecima</app-title-card>
+  </app-card>
+</div>
+<div class="row grid gap-4">
+  <app-card>
+    <app-title-card>Lista porudžbenica</app-title-card>
+    <div class="">
+      <table mat-table [dataSource]="dataSource">
+        <!-- # Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ i + 1 }}.
+          </td>
+        </ng-container>
+
+        <!-- Product Column -->
+        <!-- <ng-container matColumnDef="clientName">
+          <th mat-header-cell *matHeaderCellDef>Klijent</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.clientName }}
+          </td>
+        </ng-container> -->
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef>Proizvod</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.productName }}
+          </td>
+        </ng-container>
+        <!-- Amount Column -->
+        <!-- <ng-container matColumnDef="productId">
+          <th mat-header-cell *matHeaderCellDef>Proizvod</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.productId }}
+          </td>
+        </ng-container> -->
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Količina</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.quantity }}
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="paid">
+          <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.paid }}
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Datum upisa</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.date }}
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="dateDelivery">
+          <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.dateDelivery }}
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="note">
+          <th mat-header-cell *matHeaderCellDef>Napomena</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.note }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <!-- <div class="inline mr-8">
+                @if(element.id == editElement?.id) {
+                <button (click)="onCancel()" class="mr-2">
+                  <mat-icon class="text-red-700">cancel</mat-icon>
+                </button>
+                <button (click)="onEditProductConfirmed()" >
+                  <mat-icon class="text-green-700">check_circle</mat-icon>
+                </button>
+                } @else {
+                <button (click)="onEditProduct(element)" >
+                  <mat-icon class="text-green-700">edit</mat-icon>
+                </button>
+                }
+              </div> -->
+            <button (click)="onDeleteOrder(element.id)">
+              <mat-icon class="text-red-700">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
+    </div>
+  </app-card>
+</div>

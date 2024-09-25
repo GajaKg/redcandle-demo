@@ -1,0 +1,18 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="flex gap-4">
+    <mat-form-field class="w-1/2">
+      <mat-label>Naziv proizvoda</mat-label>
+      <input formControlName="name" matInput value="" />
+    </mat-form-field>
+
+    <mat-form-field class="w-1/2">
+      <mat-label>Količina</mat-label>
+      <input formControlName="quantity" matInput value="" />
+    </mat-form-field>
+    <!-- <mat-form-field class="w-1/2">
+      <mat-label>Napomena</mat-label>
+      <input formControlName="" matInput value="" />
+    </mat-form-field> -->
+  </div>
+  <button mat-flat-button type="submit">Potvrdi</button>
+</form>
