@@ -33,7 +33,7 @@ import { TitleCardComponent } from '../../../components/shared/title-card/title-
 
 import { ClientsStore } from '../../../store/clients/clients.store';
 import Client from '../../../interfaces/client.interface';
-import { OrdersStore } from '../../../store/orders/orders.store';
+import { ProductsStore } from '../../../store/products/products.store';
 
 @Component({
   selector: 'app-client-detail',
@@ -60,11 +60,13 @@ import { OrdersStore } from '../../../store/orders/orders.store';
 export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly clientStore = inject(ClientsStore);
-  private readonly orderStore = inject(OrdersStore);
+  // private readonly orderStore = inject(OrdersStore);
+  private readonly productStore = inject(ProductsStore);
   private readonly formBuilder = inject(FormBuilder);
   protected form!: FormGroup;
 
   protected readonly today = new FormControl(new Date());
+  protected selectedId!: number;
 
   protected selectedClient: Signal<Client | undefined> = computed(() =>
     this.clientStore.getSelectedClient()
@@ -72,8 +74,11 @@ export class ClientDetailComponent implements OnInit {
 
   // public orders = computed(() => this.orderStore.orders());
   public orders = computed(() => {
-    console.log(this.orderStore.ordersBySelectedClient())
-    return this.orderStore.ordersBySelectedClient();
+    // return this.orderStore.ordersBySelectedClient();
+    return this.productStore.ordersBySelectedClient();
+  });
+  public allProducts = computed(() => {
+    return this.productStore.allProducts();
   });
 
   public dataSource = new MatTableDataSource<any>(this.orders());
@@ -85,9 +90,10 @@ export class ClientDetailComponent implements OnInit {
     // 'productId',
     'productName',
     'quantity',
-    'paid',
     'date',
     'dateDelivery',
+    'paid',
+    'delivered',
     'note',
     'actions',
   ];
@@ -100,7 +106,7 @@ export class ClientDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      // this.selectedId = params['id'];
+      this.selectedId = params['id'];
       this.clientStore.setSelectedClientId(params['id']);
     });
 
@@ -109,16 +115,59 @@ export class ClientDetailComponent implements OnInit {
 
   initForm() {
     this.form = this.formBuilder.group({
-      product: ['', Validators.required],
-      quantity: ['', Validators.required],
-      paid: ['', Validators.required],
-      note: [''],
-      date: ['', Validators.required],
-      dateDelivery: ['', Validators.required],
+      product: [null, Validators.required],
+      // product: [this.orders(), Validators.required],
+      quantity: [null, Validators.required],
+      paid: [false],
+      note: [null],
+      date: [null],
+      dateDelivery: [null],
+      delivered: [false],
+      // paid: [false, Validators.required],
+      // note: [null],
+      // date: [null , Validators.required],
+      // dateDelivery: [null, Validators.required],
+      // delivered: [false, Validators.required],
     });
   }
 
-  onSubmit() {}
+  onSubmit() {
+    console.log(this.form)
+
+    if (
+      this.form.controls['product'].errors ||
+      this.form.controls['quantity'].errors ||
+      this.form.controls['paid'].errors ||
+      this.form.controls['date'].errors ||
+      this.form.controls['dateDelivery'].errors ||
+      this.form.controls['delivered'].errors
+    ) {
+      alert('Unesite podatke');
+      return;
+    }
+
+    const productId = +this.form.controls['product'].value;
+    const quantity = +this.form.controls['quantity'].value;
+    const paid = this.form.controls['paid'].value;
+    const date = this.form.controls['date'].value;
+    const dateDelivery = this.form.controls['dateDelivery'].value;
+    const delivered = this.form.controls['delivered'].value;
+    const note = this.form.controls['note'].value;
+
+    this.productStore.addOrder({
+      id: this.orders().length+1,
+      clientId: +this.selectedId,
+      productId,
+      quantity,
+      date,
+      paid,
+      dateDelivery,
+      delivered,
+      note
+    })
+
+    // this.form.reset();
+  }
 
   onDeleteOrder(id: number) {}
 }

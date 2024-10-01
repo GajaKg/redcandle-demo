@@ -15,12 +15,15 @@
           <div class="flex gap-4">
             <mat-form-field class="w-1/2">
               <mat-label>Proizvod</mat-label>
-              <select formControlName="product" matNativeControl required>
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
-              </select>
+              @if(orders().length) {
+              <mat-select formControlName="product" matNativeControl required>
+                @for (product of allProducts(); track product) {
+                <mat-option [value]="product.id">{{
+                  product.product
+                }}</mat-option>
+                }
+              </mat-select>
+              }
             </mat-form-field>
 
             <mat-form-field class="w-1/2">
@@ -29,44 +32,45 @@
             </mat-form-field>
           </div>
           <div class="flex gap-4">
-            <div class="w-1/2">
-              <mat-slide-toggle>Plaćeno</mat-slide-toggle>
-            </div>
+            <mat-form-field class="w-1/2">
+              <mat-label>Datum unosa</mat-label>
+              <input
+                formControlName="date"
+                matInput
+                [matDatepicker]="date"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="date"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #date></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="w-1/2">
+              <mat-label>Datum dostave</mat-label>
+              <input
+                formControlName="dateDelivery"
+                matInput
+                [matDatepicker]="dateDelivery"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dateDelivery"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dateDelivery></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="flex gap-4">
             <mat-form-field class="w-1/2">
               <mat-label>Napomena</mat-label>
               <input formControlName="note" matInput value="" />
             </mat-form-field>
+            <div class="flex gap-10 w-1/2">
+              <mat-slide-toggle formControlName="paid">Plaćeno</mat-slide-toggle>
+              <mat-slide-toggle formControlName="delivered">Isporučeno</mat-slide-toggle>
+            </div>
           </div>
         </div>
-        <div class="flex gap-4">
-          <mat-form-field class="w-1/2">
-            <mat-label>Datum unosa</mat-label>
-            <input
-              formControlName="date"
-              matInput
-              [matDatepicker]="date"
-              [formControl]="today"
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="date"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #date></mat-datepicker>
-          </mat-form-field>
-          <mat-form-field class="w-1/2">
-            <mat-label>Datum dostave</mat-label>
-            <input
-              formControlName="dateDelivery"
-              matInput
-              [matDatepicker]="dateDelivery"
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="dateDelivery"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #dateDelivery></mat-datepicker>
-          </mat-form-field>
-        </div>
+
         <button mat-flat-button type="submit">Potvrdi</button>
       </form>
     </div>
@@ -120,14 +124,6 @@
         </ng-container>
 
         <!-- Amount Column -->
-        <ng-container matColumnDef="paid">
-          <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.paid }}
-          </td>
-        </ng-container>
-
-        <!-- Amount Column -->
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Datum upisa</th>
           <td mat-cell *matCellDef="let element">
@@ -140,6 +136,30 @@
           <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
           <td mat-cell *matCellDef="let element">
             {{ element.dateDelivery }}
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="paid">
+          <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon
+              [class]="element.paid ? 'text-green-700' : 'text-red-700'"
+              >{{ element.paid ? "check_circle" : "cancel_circle" }}</mat-icon
+            >
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="delivered">
+          <th mat-header-cell *matHeaderCellDef>Isporučeno</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon
+              [class]="element.delivered ? 'text-green-700' : 'text-red-700'"
+              >{{
+                element.delivered ? "check_circle" : "cancel_circle"
+              }}</mat-icon
+            >
           </td>
         </ng-container>
 

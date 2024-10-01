@@ -42,6 +42,7 @@ const initialState: ClientsState = {
       name: 'xBox',
       address: 'Bogdana Bogdanovica 104',
       contact: '011 121 2 452',
+      note: '',
     },
   ],
   isLoading: false,
@@ -53,12 +54,6 @@ export const ClientsStore = signalStore(
   withState(initialState),
 
   withMethods((store) => ({
-    // fetchClients() {
-    //   // const [error, response] ?= fetch("some url");
-    //   // patchState(store, (state) => ({
-    //   //     clients: [...state.clients, client],
-    //   // }));
-    // },
     addClient(client: Client) {
       // patchState(store, { isLoading: true });
       patchState(store, (state) => ({
@@ -94,12 +89,5 @@ export const ClientsStore = signalStore(
       const selectedId = store.selectedClientId();
       return store.clients().find(client => client.id == selectedId);
     }),
-    //   booksCount: computed(() => books().length),
-    //   sortedBooks: computed(() => {
-    //     const direction = filter.order() === 'asc' ? 1 : -1;
-    //     return books().toSorted((a, b) =>
-    //       direction * a.title.localeCompare(b.title)
-    //     );
-    //   }),
   }))
 );

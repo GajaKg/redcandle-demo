@@ -46,7 +46,8 @@ export class ProductListComponent {
   private readonly storeProducts = inject(ProductsStore);
   protected displayedColumns: string[] = ['id', 'product', 'amount', 'actions'];
 
-  protected readonly products = computed(() => this.storeProducts.products());
+  protected readonly products = computed(() => this.storeProducts.allProducts());
+  // protected readonly products = this.storeProducts.allProducts;
   public dataSource = new MatTableDataSource<Product>(this.products());
 
   public editElement?: null | Product = null;
