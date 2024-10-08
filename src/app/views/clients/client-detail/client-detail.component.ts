@@ -15,6 +15,7 @@ import {
   ReactiveFormsModule,
   FormControl,
 } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -53,6 +54,7 @@ import { ProductsStore } from '../../../store/products/products.store';
     MatPaginatorModule,
     MatTableModule,
     MatIconModule,
+    DatePipe,
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
@@ -67,18 +69,19 @@ export class ClientDetailComponent implements OnInit {
 
   protected readonly today = new FormControl(new Date());
   protected selectedId!: number;
+  protected productQuantity!: number;
+  protected editOrder?: any;
 
   protected selectedClient: Signal<Client | undefined> = computed(() =>
     this.clientStore.getSelectedClient()
   );
 
-  // public orders = computed(() => this.orderStore.orders());
   public orders = computed(() => {
     // return this.orderStore.ordersBySelectedClient();
     return this.productStore.ordersBySelectedClient();
   });
   public allProducts = computed(() => {
-    return this.productStore.allProducts();
+    return this.productStore.products();
   });
 
   public dataSource = new MatTableDataSource<any>(this.orders());
@@ -131,9 +134,14 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    console.log(this.form)
+  onSelectProduct(productId: number) {
+    const product = this.productStore.findProductById(productId);
+    this.productQuantity = product ? product?.amount : 0;
+    this.form.get('amount')?.patchValue(product ? product?.amount : 0);
+  }
 
+  onSubmit() {
+    console.log(this.form);
     if (
       this.form.controls['product'].errors ||
       this.form.controls['quantity'].errors ||
@@ -155,7 +163,7 @@ export class ClientDetailComponent implements OnInit {
     const note = this.form.controls['note'].value;
 
     this.productStore.addOrder({
-      id: this.orders().length+1,
+      id: this.orders().length + 1,
       clientId: +this.selectedId,
       productId,
       quantity,
@@ -163,11 +171,58 @@ export class ClientDetailComponent implements OnInit {
       paid,
       dateDelivery,
       delivered,
-      note
-    })
+      note,
+    });
 
-    // this.form.reset();
+    alert('Uspešna uneta porudžbina!');
+
+    this.form.reset();
   }
 
-  onDeleteOrder(id: number) {}
+  onDeleteOrder(id: number) {
+    this.productStore.deleteOrder(id);
+  }
+
+  onEditOrder(order: any) {
+    this.editOrder = {
+      ...order,
+      date: new FormControl(new Date(order.date)),
+      dateDelivery: new FormControl(new Date(order.dateDelivery)),
+    };
+    const product = this.productStore.findProductById(order.productId);
+    this.productQuantity = product
+      ? +product?.amount + this.editOrder.quantity
+      : 0;
+  }
+
+  onEditOrderConfirmed() {
+    const copyOrder = {
+      id: this.editOrder.id,
+      clientId: this.editOrder.clientId,
+      clientName: this.editOrder.clientName,
+      productId: this.editOrder.productId,
+      quantity: this.editOrder.quantity,
+      paid: this.editOrder.paid,
+      date: this.editOrder.date.value,
+      dateDelivery: this.editOrder.dateDelivery.value,
+      delivered: this.editOrder.delivered,
+      note: this.editOrder.note,
+      // ...this.editOrder,
+      // date: this.editOrder.date.value,
+      // dateDelivery: this.editOrder.dateDelivery.value,
+    };
+
+    // const copyOrder = structuredClone(this.editOrder);
+    // copyOrder.date = this.editOrder.date.value;
+    // copyOrder.dateDelivery = this.editOrder.dateDelivery.value;
+
+    if (this.editOrder && this.editOrder.quantity <= this.productQuantity) {
+      this.productStore.editOrder(copyOrder, this.productQuantity);
+      this.editOrder = null;
+    }
+  }
+
+  onCancel() {
+    this.editOrder = null;
+  }
 }

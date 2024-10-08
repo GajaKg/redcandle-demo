@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Konami",
+    "address": "Pere Bozica",
+    "contact": "063 666 555",
+    "note": "Neka napomena"
+  },
+  {
+    "id": 2,
+    "name": "Sony",
+    "address": "Dusana Kecmana 20",
+    "contact": "064 888 76 69",
+    "note": ""
+  },
+  {
+    "id": 3,
+    "name": "Nitendo",
+    "address": "Milosa Teodosica 11",
+    "contact": "034 784 777",
+    "note": ""
+  },
+  {
+    "id": 4,
+    "name": "xBox",
+    "address": "Bogdana Bogdanovica 104",
+    "contact": "011 121 2 452",
+    "note": ""
+  }
+]

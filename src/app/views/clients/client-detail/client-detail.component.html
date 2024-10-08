@@ -15,30 +15,41 @@
           <div class="flex gap-4">
             <mat-form-field class="w-1/2">
               <mat-label>Proizvod</mat-label>
-              @if(orders().length) {
-              <mat-select formControlName="product" matNativeControl required>
+              <mat-select
+                formControlName="product"
+                matNativeControl
+                required
+                (selectionChange)="onSelectProduct($event.value)"
+              >
                 @for (product of allProducts(); track product) {
-                <mat-option [value]="product.id">{{
-                  product.product
-                }}</mat-option>
+                <mat-option [value]="product.id">
+                  {{ product.product }}
+                </mat-option>
                 }
               </mat-select>
-              }
             </mat-form-field>
 
             <mat-form-field class="w-1/2">
-              <mat-label>Količina</mat-label>
-              <input formControlName="quantity" matInput value="" />
+              <span class="text-red-800 text-xs"> </span>
+              <mat-label>Količina {{ productQuantity }}</mat-label>
+              <input
+                formControlName="quantity"
+                matInput
+                [max]="+productQuantity"
+                type="number"
+              />
+              <mat-error class="text-red-800 text-xs">
+                Na stanju:
+                <strong class="text-red-800 text-xs">{{
+                  productQuantity
+                }}</strong>
+              </mat-error>
             </mat-form-field>
           </div>
           <div class="flex gap-4">
             <mat-form-field class="w-1/2">
               <mat-label>Datum unosa</mat-label>
-              <input
-                formControlName="date"
-                matInput
-                [matDatepicker]="date"
-              />
+              <input formControlName="date" matInput [matDatepicker]="date" />
               <mat-datepicker-toggle
                 matIconSuffix
                 [for]="date"
@@ -65,8 +76,12 @@
               <input formControlName="note" matInput value="" />
             </mat-form-field>
             <div class="flex gap-10 w-1/2">
-              <mat-slide-toggle formControlName="paid">Plaćeno</mat-slide-toggle>
-              <mat-slide-toggle formControlName="delivered">Isporučeno</mat-slide-toggle>
+              <mat-slide-toggle formControlName="paid"
+                >Plaćeno</mat-slide-toggle
+              >
+              <mat-slide-toggle formControlName="delivered"
+                >Isporučeno</mat-slide-toggle
+              >
             </div>
           </div>
         </div>
@@ -119,7 +134,26 @@
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef>Količina</th>
           <td mat-cell *matCellDef="let element">
+            @if(element.id == editOrder?.id) {
+
+            <mat-form-field style="max-width: 130px">
+              <mat-label>Količina {{ productQuantity }}</mat-label>
+              <input
+                [(ngModel)]="editOrder!.quantity"
+                matInput
+                [max]="+productQuantity"
+                type="number"
+              />
+              <mat-error class="text-red-800 text-xs">
+                Na stanju:
+                <strong class="text-red-800 text-xs">{{
+                  productQuantity
+                }}</strong>
+              </mat-error>
+            </mat-form-field>
+            } @else {
             {{ element.quantity }}
+            }
           </td>
         </ng-container>
 
@@ -127,15 +161,54 @@
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Datum upisa</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.date }}
+            @if(element.id == editOrder?.id) {
+            <mat-form-field style="max-width: 170px">
+              <mat-label>Datum upisa</mat-label>
+              <input
+              (ngModel)="editOrder.date"
+              [formControl]="editOrder.date"
+                matInput
+                [matDatepicker]="date"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="date"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #date></mat-datepicker>
+            </mat-form-field>
+
+            } @else {
+<!-- 
+              {{element.date}} - 
+              {{element.date?.value}} -->
+            {{ element.date | date : "dd.MM.yyyy" }}
+            }
           </td>
         </ng-container>
 
         <!-- Amount Column -->
         <ng-container matColumnDef="dateDelivery">
-          <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
+          <th mat-header-cell *matHeaderCellDef>Datum dostave </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.dateDelivery }}
+            @if(element.id == editOrder?.id) {
+            <mat-form-field style="max-width: 170px">
+              <mat-label>Datum dostave</mat-label>
+              <input
+                (ngModel)="editOrder.dateDelivery"
+                [formControl]="editOrder.dateDelivery"
+                matInput
+                [matDatepicker]="dateDelivery"
+                [min]="editOrder.date.value"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dateDelivery"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dateDelivery></mat-datepicker>
+            </mat-form-field>
+            } @else {
+            {{ element.dateDelivery | date : "dd.MM.yyyy" }}
+            }
           </td>
         </ng-container>
 
@@ -143,10 +216,15 @@
         <ng-container matColumnDef="paid">
           <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
           <td mat-cell *matCellDef="let element">
+            @if(element.id == editOrder?.id) {
+            <mat-slide-toggle [(ngModel)]="editOrder!.paid" />
+            } @else {
             <mat-icon
               [class]="element.paid ? 'text-green-700' : 'text-red-700'"
-              >{{ element.paid ? "check_circle" : "cancel_circle" }}</mat-icon
             >
+              {{ element.paid ? "check_circle" : "cancel_circle" }}
+            </mat-icon>
+            }
           </td>
         </ng-container>
 
@@ -154,12 +232,15 @@
         <ng-container matColumnDef="delivered">
           <th mat-header-cell *matHeaderCellDef>Isporučeno</th>
           <td mat-cell *matCellDef="let element">
+            @if(element.id == editOrder?.id) {
+            <mat-slide-toggle [(ngModel)]="editOrder!.delivered" />
+            } @else {
             <mat-icon
               [class]="element.delivered ? 'text-green-700' : 'text-red-700'"
-              >{{
-                element.delivered ? "check_circle" : "cancel_circle"
-              }}</mat-icon
             >
+              {{ element.delivered ? "check_circle" : "cancel_circle" }}
+            </mat-icon>
+            }
           </td>
         </ng-container>
 
@@ -175,20 +256,20 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <!-- <div class="inline mr-8">
-                @if(element.id == editElement?.id) {
-                <button (click)="onCancel()" class="mr-2">
-                  <mat-icon class="text-red-700">cancel</mat-icon>
-                </button>
-                <button (click)="onEditProductConfirmed()" >
-                  <mat-icon class="text-green-700">check_circle</mat-icon>
-                </button>
-                } @else {
-                <button (click)="onEditProduct(element)" >
-                  <mat-icon class="text-green-700">edit</mat-icon>
-                </button>
-                }
-              </div> -->
+            <div class="inline mr-8">
+              @if(element.id == editOrder?.id) {
+              <button (click)="onCancel()" class="mr-2">
+                <mat-icon class="text-red-700">cancel</mat-icon>
+              </button>
+              <button (click)="onEditOrderConfirmed()">
+                <mat-icon class="text-green-700">check_circle</mat-icon>
+              </button>
+              } @else {
+              <button (click)="onEditOrder(element)">
+                <mat-icon class="text-green-700">edit</mat-icon>
+              </button>
+              }
+            </div>
             <button (click)="onDeleteOrder(element.id)">
               <mat-icon class="text-red-700">delete</mat-icon>
             </button>

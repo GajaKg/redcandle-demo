@@ -12,10 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
 import { ProductsStore } from '../../../store/products/products.store';
 import Product from '../../../interfaces/product.interface';
@@ -46,8 +44,9 @@ export class ProductListComponent {
   private readonly storeProducts = inject(ProductsStore);
   protected displayedColumns: string[] = ['id', 'product', 'amount', 'actions'];
 
-  protected readonly products = computed(() => this.storeProducts.allProducts());
-  // protected readonly products = this.storeProducts.allProducts;
+  protected readonly products = computed(() =>
+    this.storeProducts.products()
+  );
   public dataSource = new MatTableDataSource<Product>(this.products());
 
   public editElement?: null | Product = null;

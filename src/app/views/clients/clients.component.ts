@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -67,6 +68,7 @@ export class ClientsComponent implements AfterViewInit {
       this.dataSource.data = this.clients();
     });
   }
+
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;

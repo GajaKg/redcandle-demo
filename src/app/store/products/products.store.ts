@@ -9,6 +9,9 @@ import Product from '../../interfaces/product.interface';
 import { computed, inject } from '@angular/core';
 import { ClientsStore } from '../clients/clients.store';
 import Client from '../../interfaces/client.interface';
+import { ProductService } from '../../views/production/product.service';
+import { forkJoin, map, tap } from 'rxjs';
+import { OrderService } from '../../views/clients/order.service';
 
 type ProductsState = {
   products: Product[];
@@ -17,141 +20,115 @@ type ProductsState = {
 };
 
 const initialState: ProductsState = {
-  products: [
-    { id: 1, product: 'Žižak', amount: 5000 },
-    { id: 2, product: 'Čašice', amount: 5000 },
-    { id: 3, product: 'Sveċe', amount: 5000 },
-  ],
-  orders: [
-    {
-      id: 1,
-      clientId: 3,
-      clientName: '',
-      productId: 1,
-      quantity: 1500,
-      paid: true,
-      date: '21.10.2024',
-      dateDelivery: '30.10.2024',
-      delivered: true,
-      note: 'Neka napomena',
-    },
-    {
-      id: 2,
-      clientId: 3,
-      clientName: '',
-      productId: 2,
-      quantity: 800,
-      paid: true,
-      date: '15.10.2024',
-      dateDelivery: '22.10.2024',
-      delivered: true,
-      note: 'Neka napomena',
-    },
-    {
-      id: 3,
-      clientId: 2,
-      clientName: '',
-      productId: 3,
-      quantity: 2000,
-      paid: true,
-      date: '15.09.2024',
-      dateDelivery: '23.09.2024',
-      delivered: false,
-      note: '',
-    },
-    {
-      id: 4,
-      clientId: 1,
-      clientName: '',
-      productId: 2,
-      quantity: 400,
-      paid: true,
-      date: '10.09.2024',
-      dateDelivery: '22.09.2024',
-      delivered: false,
-      note: 'Neka napomena',
-    },
-    {
-      id: 5,
-      clientId: 4,
-      clientName: '',
-      productId: 2,
-      quantity: 300,
-      paid: true,
-      date: '22.10.2024',
-      dateDelivery: '11.11.2024',
-      delivered: true,
-      note: '',
-    },
-    {
-      id: 6,
-      clientId: 1,
-      clientName: '',
-      productId: 3,
-      quantity: 2500,
-      paid: true,
-      date: '25.08.2024',
-      dateDelivery: '30.08.2024',
-      delivered: false,
-      note: 'Neka napomena',
-    },
-  ],
+  products: [],
+  orders: [],
   isLoading: false,
 };
 
 export const ProductsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withMethods((store) => ({
-    addProduct(product: Product) {
-      // patchState(store, { isLoading: true });
-      patchState(store, (state) => ({
-        products: [...state.products, product],
-      }));
-      // patchState(store, { isLoading: false });
-    },
-    deleteProduct(id: number) {
-      const index = store.products().findIndex((el: Product) => el.id === id);
-      store.products().splice(index, 1);
+  withMethods(
+    (
+      store,
+      productService = inject(ProductService),
+      orderService = inject(OrderService)
+    ) => ({
+      getProductsOrders() {
+        forkJoin({
+          products: productService.fetchProducts(),
+          orders: orderService.fetchOrders(),
+        })
+          .pipe(
+            tap(({ products, orders }) => {
+              patchState(store, (state) => ({
+                products: [...products],
+              }));
+              patchState(store, (state) => ({
+                orders: [...orders],
+              }));
+            })
+          )
+          .subscribe();
+      },
+      addProduct(product: Product) {
+        // patchState(store, { isLoading: true });
+        patchState(store, (state) => ({
+          products: [...state.products, product],
+        }));
+        // patchState(store, { isLoading: false });
+      },
+      deleteProduct(id: number) {
+        patchState(store, (state) => ({
+          products: state.products.filter((productEl: Product) => {
+            return productEl.id !== id;
+          }),
+        }));
+      },
+      editProduct(product: Product) {
+        patchState(store, (state) => ({
+          products: state.products.map((productEl: Product) => {
+            return productEl.id === product.id ? { ...product } : productEl;
+          }),
+        }));
+      },
+      findProductById(id: number) {
+        return store.products().find((product: Product) => +product.id === +id);
+      },
+      addOrder(order: any) {
+        patchState(store, (state) => ({
+          products: state.products.map((product: Product) => {
+            return product.id === order.productId
+              ? { ...product, amount: product.amount - order.quantity || 0 }
+              : product;
+          }),
+        }));
 
-      patchState(store, (state) => ({
-        products: [...state.products],
-      }));
-    },
-    editProduct(product: Product) {
-      const index = store
-        .products()
-        .findIndex((el: Product) => el.id === product.id);
-      store.products()[index] = product;
-
-      patchState(store, (state) => ({
-        products: [...state.products],
-      }));
-    },
-    addOrder(order: any) {
-      patchState(store, (state) => ({
-        orders: [...state.orders, order],
-      }));
-    },
-  })),
+        patchState(store, (state) => ({
+          orders: [...state.orders, order],
+        }));
+      },
+      editOrder(order: any, productQuantity: number) {
+        patchState(store, (state) => ({
+          orders: state.orders.map((orderEl) => {
+            return orderEl.id === order.id ? order : orderEl;
+          }),
+        }));
+        patchState(store, (state) => ({
+          products: state.products.map((product: Product) => {
+            return product.id === order.productId
+              ? { ...product, amount: productQuantity - order.quantity || 0 }
+              : product;
+          }),
+        }));
+      },
+      deleteOrder(id: number) {
+        patchState(store, (state) => ({
+          orders: state.orders.filter((orderEl: any) => {
+            return orderEl.id !== id;
+          }),
+        }));
+      },
+    })
+  ),
   withComputed((store) => {
     const clientStore = inject(ClientsStore);
 
     return {
-      allProducts: computed(() => {
-        // let productCopy = store.products();
-        // let productCopy = store.products().map(product => ({ ...product }));
-        const productCopy = structuredClone(store.products())
-   
-        return productCopy.map((product: Product) => {
-          store.orders().forEach(order => {
-            if (order.productId == product.id) {
-              product.amount -= +order.quantity;
-            }
-          })
-          return product;
-        })
-      }),
+      // getProductsOrders: computed(() => {
+      //   // let productCopy = store.products();
+      //   // let productCopy = store.products().map(product => ({ ...product }));
+      //   const productCopy = structuredClone(store.products());
+
+      //   return productCopy.map((product: Product) => {
+      //     store.orders().forEach((order) => {
+      //       if (order.productId == product.id) {
+      //         product.amount -= +order.quantity;
+      //       }
+      //     });
+      //     return product;
+      //   });
+      // }),
       allOrders: computed(() => {
         return store.orders().map((order) => {
           const client = clientStore.clients().find((client: Client) => {
