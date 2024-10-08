@@ -49,7 +49,12 @@
           <div class="flex gap-4">
             <mat-form-field class="w-1/2">
               <mat-label>Datum unosa</mat-label>
-              <input formControlName="date" matInput [matDatepicker]="date" />
+              <input
+                formControlName="date"
+                matInput
+                [matDatepicker]="date"
+                [max]="form.get('dateDelivery')?.value"
+              />
               <mat-datepicker-toggle
                 matIconSuffix
                 [for]="date"
@@ -62,6 +67,7 @@
                 formControlName="dateDelivery"
                 matInput
                 [matDatepicker]="dateDelivery"
+                [min]="form.get('date')?.value"
               />
               <mat-datepicker-toggle
                 matIconSuffix
@@ -115,7 +121,7 @@
           </td>
         </ng-container> -->
 
-        <!-- Amount Column -->
+        <!-- productName Column -->
         <ng-container matColumnDef="productName">
           <th mat-header-cell *matHeaderCellDef>Proizvod</th>
           <td mat-cell *matCellDef="let element">
@@ -130,7 +136,7 @@
           </td>
         </ng-container> -->
 
-        <!-- Amount Column -->
+        <!-- quantity Column -->
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef>Količina</th>
           <td mat-cell *matCellDef="let element">
@@ -165,10 +171,11 @@
             <mat-form-field style="max-width: 170px">
               <mat-label>Datum upisa</mat-label>
               <input
-              (ngModel)="editOrder.date"
-              [formControl]="editOrder.date"
+                (ngModel)="(editOrder.date)"
+                [formControl]="editOrder.date"
                 matInput
                 [matDatepicker]="date"
+                [max]="editOrder.dateDelivery.value"
               />
               <mat-datepicker-toggle
                 matIconSuffix
@@ -178,23 +185,20 @@
             </mat-form-field>
 
             } @else {
-<!-- 
-              {{element.date}} - 
-              {{element.date?.value}} -->
             {{ element.date | date : "dd.MM.yyyy" }}
             }
           </td>
         </ng-container>
 
-        <!-- Amount Column -->
+        <!-- dateDelivery Column -->
         <ng-container matColumnDef="dateDelivery">
-          <th mat-header-cell *matHeaderCellDef>Datum dostave </th>
+          <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id == editOrder?.id) {
             <mat-form-field style="max-width: 170px">
               <mat-label>Datum dostave</mat-label>
               <input
-                (ngModel)="editOrder.dateDelivery"
+                (ngModel)="(editOrder.dateDelivery)"
                 [formControl]="editOrder.dateDelivery"
                 matInput
                 [matDatepicker]="dateDelivery"
@@ -212,7 +216,7 @@
           </td>
         </ng-container>
 
-        <!-- Amount Column -->
+        <!-- paid Column -->
         <ng-container matColumnDef="paid">
           <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
           <td mat-cell *matCellDef="let element">
@@ -228,7 +232,7 @@
           </td>
         </ng-container>
 
-        <!-- Amount Column -->
+        <!-- delivered Column -->
         <ng-container matColumnDef="delivered">
           <th mat-header-cell *matHeaderCellDef>Isporučeno</th>
           <td mat-cell *matCellDef="let element">

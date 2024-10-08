@@ -138,6 +138,7 @@ export class ClientDetailComponent implements OnInit {
     const product = this.productStore.findProductById(productId);
     this.productQuantity = product ? product?.amount : 0;
     this.form.get('amount')?.patchValue(product ? product?.amount : 0);
+    console.log(this.form.get('date'))
   }
 
   onSubmit() {
