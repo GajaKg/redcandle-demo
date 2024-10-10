@@ -48,6 +48,18 @@
     "note": "Neka napomena"
   },
   {
+    "id": 7,
+    "clientId": 1,
+    "clientName": "",
+    "productId": 2,
+    "quantity": 500,
+    "paid": true,
+    "date": "Sun Jun 23 2024 00:00:00 GMT+0100 (Central European Standard Time)",
+    "dateDelivery": "Mon Aug 12 2024 00:00:00 GMT+0100 (Central European Standard Time)",
+    "delivered": false,
+    "note": "Neka napomena"
+  },
+  {
     "id": 5,
     "clientId": 4,
     "clientName": "",
@@ -66,7 +78,7 @@
     "productId": 3,
     "quantity": 2500,
     "paid": true,
-    "date": "Sun Jun 23 2024 00:00:00 GMT+0100 (Central European Standard Time)",
+    "date": "Sun Jun 23  2024 00:00:00 GMT+0100 (Central European Standard Time)",
     "dateDelivery": "Tue Jun 25 2024 00:00:00 GMT+0100 (Central European Standard Time)",
     "delivered": false,
     "note": "Neka napomena"

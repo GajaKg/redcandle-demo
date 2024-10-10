@@ -35,6 +35,7 @@ import { TitleCardComponent } from '../../../components/shared/title-card/title-
 import { ClientsStore } from '../../../store/clients/clients.store';
 import Client from '../../../interfaces/client.interface';
 import { ProductsStore } from '../../../store/products/products.store';
+import { ChartColumnComponent } from '../../../components/shared/charts/chart-column/chart-column.component';
 
 @Component({
   selector: 'app-client-detail',
@@ -55,6 +56,7 @@ import { ProductsStore } from '../../../store/products/products.store';
     MatTableModule,
     MatIconModule,
     DatePipe,
+    ChartColumnComponent,
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
@@ -77,9 +79,35 @@ export class ClientDetailComponent implements OnInit {
   );
 
   public orders = computed(() => {
-    // return this.orderStore.ordersBySelectedClient();
     return this.productStore.ordersBySelectedClient();
   });
+
+  public chartData = computed(() => {
+    const myMap: any[] = [];
+
+    this.orders().forEach((order) => {
+      const moonLanding = new Date(order.date);
+      const month = moonLanding.getMonth();
+
+      const columnProduct = myMap.find(
+        (column) => column.name === order.productName
+      );
+
+      if (columnProduct) {
+        columnProduct.data[month] = (columnProduct.data[month] || 0) + order.quantity;
+      } else {
+        let data = new Array(12).fill(0);
+        data[month] = order.quantity;
+
+        myMap.push({
+          name: order.productName,
+          data: data,
+        });
+      }
+    });
+    return myMap;
+  });
+
   public allProducts = computed(() => {
     return this.productStore.products();
   });
@@ -104,6 +132,7 @@ export class ClientDetailComponent implements OnInit {
   constructor() {
     effect(() => {
       this.dataSource.data = this.orders();
+      console.log(this.orders())
     });
   }
 
@@ -138,7 +167,6 @@ export class ClientDetailComponent implements OnInit {
     const product = this.productStore.findProductById(productId);
     this.productQuantity = product ? product?.amount : 0;
     this.form.get('amount')?.patchValue(product ? product?.amount : 0);
-    console.log(this.form.get('date'))
   }
 
   onSubmit() {
@@ -164,7 +192,8 @@ export class ClientDetailComponent implements OnInit {
     const note = this.form.controls['note'].value;
 
     this.productStore.addOrder({
-      id: this.orders().length + 1,
+      id: Symbol(),
+      // id: this.orders().length + 1,
       clientId: +this.selectedId,
       productId,
       quantity,

@@ -75,7 +75,8 @@ export class ClientsComponent implements AfterViewInit {
   }
 
   onSubmit(client: any) {
-    const id = this.clients().length + 1;
+    // const id = this.clients().length + 1;
+    const id = Symbol();
     this.storeClients.addClient({ id, ...client });
   }
 

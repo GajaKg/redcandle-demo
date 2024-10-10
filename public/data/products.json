@@ -1,5 +1,5 @@
 [
   { "id": 1, "product": "Žižak", "amount": 3500 },
-  { "id": 2, "product": "Čašice", "amount": 3500 },
+  { "id": 2, "product": "Čašice", "amount": 3000 },
   { "id": 3, "product": "Sveċe", "amount": 500 }
 ]
