@@ -1,0 +1,17 @@
+@if(chartOptions['xaxis']) {
+<apx-chart
+  #chartObj
+  [series]="chartOptions['series']"
+  [chart]="chartOptions['chart']"
+  [xaxis]="chartOptions['xaxis']"
+  [colors] = "['#eb1616', '#388e3c', '#2E294E', '#F46036', '#E2C044']"
+/>
+} @else {
+<apx-chart
+  #chartObj
+  [series]="chartOptions['series']"
+  [chart]="chartOptions['chart']"
+  [labels]="chartOptions['labels']"
+  [colors] = "['#eb1616', '#388e3c', '#2E294E', '#F46036', '#E2C044']"
+/>
+}

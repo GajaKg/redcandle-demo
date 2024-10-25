@@ -5,23 +5,25 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import Product from '../../interfaces/product.interface';
+import {Product, Production} from '../../interfaces/product.interface';
 import { computed, inject } from '@angular/core';
 import { ClientsStore } from '../clients/clients.store';
 import Client from '../../interfaces/client.interface';
 import { ProductService } from '../../views/production/product.service';
-import { forkJoin, map, tap } from 'rxjs';
+import { forkJoin, tap } from 'rxjs';
 import { OrderService } from '../../views/clients/order.service';
 
 type ProductsState = {
   products: Product[];
   orders: any[];
+  selectedProductId: number | null;
   isLoading: boolean;
 };
 
 const initialState: ProductsState = {
   products: [],
   orders: [],
+  selectedProductId: null,
   isLoading: false,
 };
 
@@ -35,21 +37,23 @@ export const ProductsStore = signalStore(
       orderService = inject(OrderService)
     ) => ({
       getProductsOrders() {
-        forkJoin({
+        return forkJoin({
           products: productService.fetchProducts(),
           orders: orderService.fetchOrders(),
-        })
-          .pipe(
-            tap(({ products, orders }) => {
-              patchState(store, (state) => ({
-                products: [...products],
-              }));
-              patchState(store, (state) => ({
-                orders: [...orders],
-              }));
-            })
-          )
-          .subscribe();
+        }).pipe(
+          tap(({ products, orders }) => {
+            // @TODO remove after adding backend
+            if (store.products().length) return;
+          
+            patchState(store, (state) => ({
+              products: [...products],
+            }));
+            patchState(store, (state) => ({
+              orders: [...orders],
+            }));
+          })
+        );
+        // .subscribe();
       },
       addProduct(product: Product) {
         // patchState(store, { isLoading: true });
@@ -57,6 +61,18 @@ export const ProductsStore = signalStore(
           products: [...state.products, product],
         }));
         // patchState(store, { isLoading: false });
+      },
+      addProduction(productId: number, developed: Production) {
+        patchState(store, (state) => ({
+          products: state.products.map((productEl: Product) => {
+            return productEl.id == +productId
+              ? {
+                  ...productEl,
+                  production: [...productEl.production, developed],
+                }
+              : productEl;
+          }),
+        }));
       },
       deleteProduct(id: number) {
         patchState(store, (state) => ({
@@ -67,19 +83,24 @@ export const ProductsStore = signalStore(
       },
       editProduct(product: Product) {
         patchState(store, (state) => ({
-          products: state.products.map((productEl: Product) => {
-            return productEl.id === product.id ? { ...product } : productEl;
-          }),
+          products: state.products.map((productEl: Product) =>
+            productEl.id === product.id
+              ? { ...product, production: [...product.production] }
+              : productEl
+          ),
         }));
       },
       findProductById(id: number) {
         return store.products().find((product: Product) => +product.id === +id);
       },
+      setSelectedProductId(id: number) {
+        patchState(store, { selectedProductId: id });
+      },
       addOrder(order: any) {
         patchState(store, (state) => ({
           products: state.products.map((product: Product) => {
             return product.id === order.productId
-              ? { ...product, amount: product.amount - order.quantity || 0 }
+              ? { ...product, amount: product.amount - order.quantity }
               : product;
           }),
         }));
@@ -129,6 +150,11 @@ export const ProductsStore = signalStore(
       //     return product;
       //   });
       // }),
+      selectedProduct: computed<Product | undefined>(() => {
+        return store
+          .products()
+          .find((product: Product) => product.id == store.selectedProductId());
+      }),
       allOrders: computed(() => {
         return store.orders().map((order) => {
           const client = clientStore.clients().find((client: Client) => {

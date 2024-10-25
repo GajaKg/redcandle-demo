@@ -36,7 +36,7 @@ export const routes: Routes = [
         // canActivate: [() => inject(GuardService).canActivateScheduler()]
       },
       {
-        path: Route.Product,
+        path: Route.Product + '/:id',
         component: ProductDetailComponent,
         // canActivate: [() => inject(GuardService).canActivateScheduler()]
       },

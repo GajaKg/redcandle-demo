@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  ViewChild,
-  effect,
-} from '@angular/core';
+import { Component, computed, inject, ViewChild, effect } from '@angular/core';
 import { CardComponent } from '../../../components/shared/card/card.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,8 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
 import { ProductsStore } from '../../../store/products/products.store';
-import Product from '../../../interfaces/product.interface';
+import { Product } from '../../../interfaces/product.interface';
 import { ProductFormComponent } from '../../../components/product/product-form/product-form.component';
+import { Route } from '../../../app.routes';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -42,11 +38,11 @@ import { ProductFormComponent } from '../../../components/product/product-form/p
 export class ProductListComponent {
   // private readonly formBuilder = inject(FormBuilder);
   private readonly storeProducts = inject(ProductsStore);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
   protected displayedColumns: string[] = ['id', 'product', 'amount', 'actions'];
 
-  protected readonly products = computed(() =>
-    this.storeProducts.products()
-  );
+  protected readonly products = computed(() => this.storeProducts.products());
   public dataSource = new MatTableDataSource<Product>(this.products());
 
   public editElement?: null | Product = null;
@@ -63,12 +59,17 @@ export class ProductListComponent {
     this.dataSource.paginator = this.paginator;
   }
 
-  onSubmit(product: any) {
-    const name = product.name;
-    const quantity = product.quantity;
+  onSubmit(product: Partial<Product>) {
+    const name = product.product || "";
+    const quantity = product.amount || 0;
     const id = this.products().length + 1;
 
-    this.storeProducts.addProduct({ id: id, product: name, amount: quantity });
+    this.storeProducts.addProduct({
+      id: id,
+      product: name,
+      amount: quantity,
+      production: [],
+    });
   }
 
   onDeleteProduct(id: number) {
@@ -88,5 +89,11 @@ export class ProductListComponent {
 
   onCancel() {
     this.editElement = null;
+  }
+
+  navigate(productId: number) {
+    this.router.navigate([Route.Product, productId], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   title = 'Red Candle Management';
 
   ngOnInit() {
-    this.storeProducts.getProductsOrders();
+    this.storeProducts.getProductsOrders().subscribe();
     this.storeClients.getClients();
   }
 }

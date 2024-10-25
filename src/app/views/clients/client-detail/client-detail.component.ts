@@ -132,7 +132,6 @@ export class ClientDetailComponent implements OnInit {
   constructor() {
     effect(() => {
       this.dataSource.data = this.orders();
-      console.log(this.orders())
     });
   }
 
