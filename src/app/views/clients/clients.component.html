@@ -21,7 +21,7 @@
           <th mat-header-cell *matHeaderCellDef>Klijent</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id === editElement?.id) {
-            <mat-form-field>
+            <mat-form-field (click)="$event.stopPropagation()" >
               <mat-label>Naziv proizvoda</mat-label>
               <input matInput [(ngModel)]="editElement!.name" />
             </mat-form-field>
@@ -36,7 +36,7 @@
           <th mat-header-cell *matHeaderCellDef>Adresa</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id === editElement?.id) {
-            <mat-form-field>
+            <mat-form-field (click)="$event.stopPropagation()">
               <mat-label>Adresa</mat-label>
               <input matInput [(ngModel)]="editElement!.address" />
             </mat-form-field>
@@ -51,7 +51,7 @@
           <th mat-header-cell *matHeaderCellDef>Kontakt</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id === editElement?.id) {
-            <mat-form-field>
+            <mat-form-field (click)="$event.stopPropagation()">
               <mat-label>Kontakt</mat-label>
               <input matInput [(ngModel)]="editElement!.contact" />
             </mat-form-field>
@@ -66,7 +66,7 @@
           <th mat-header-cell *matHeaderCellDef>Napomena</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id === editElement?.id) {
-            <mat-form-field>
+            <mat-form-field (click)="$event.stopPropagation()">
               <mat-label>Napomena</mat-label>
               <input matInput [(ngModel)]="editElement!.note" />
             </mat-form-field>
@@ -79,22 +79,22 @@
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" class="w-36 !text-right">
             <div class="inline mr-8">
               @if(element.id == editElement?.id) {
-              <button (click)="onCancel()" class="mr-2">
+              <button (click)="onCancel(); $event.stopPropagation()" class="mr-2">
                 <mat-icon class="text-red-700">cancel</mat-icon>
               </button>
-              <button (click)="onEditClientConfirmed()">
+              <button (click)="onEditClientConfirmed(); $event.stopPropagation()">
                 <mat-icon class="text-green-700">check_circle</mat-icon>
               </button>
               } @else {
-              <button (click)="onEditClient(element)">
+              <button (click)="onEditClient(element); $event.stopPropagation()">
                 <mat-icon class="text-green-700">edit</mat-icon>
               </button>
               }
             </div>
-            <button (click)="onDeleteClient(element.id)">
+            <button (click)="onDeleteClient(element.id); $event.stopPropagation()">
               <mat-icon class="text-red-700">delete</mat-icon>
             </button>
           </td>

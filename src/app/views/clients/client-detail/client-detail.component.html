@@ -109,7 +109,7 @@
         <!-- # Column -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>#</th>
-          <td mat-cell *matCellDef="let element; let i = index">
+          <td mat-cell *matCellDef="let element; let i = index" class="w-12">
             {{ i + 1 }}.
           </td>
         </ng-container>
@@ -260,7 +260,7 @@
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" class="w-36 !text-right">
             <div class="inline mr-8">
               @if(element.id == editOrder?.id) {
               <button (click)="onCancel()" class="mr-2">
