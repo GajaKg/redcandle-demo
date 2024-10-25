@@ -70,16 +70,34 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   protected productId?: number;
   protected chartData: number[] = [];
   protected chartDataProduction: any = signal([]);
-  public editElementIndex: number | undefined;
-  public editElement?: Production;
+  protected currentYear: any = signal(new Date().getFullYear());
+  protected selectedProductionYear: any = signal(new Date().getFullYear());
+  protected editElementIndex: number | undefined;
+  protected editElement?: Production;
 
   // table
   protected displayedColumns: string[] = ['id', 'date', 'quantity', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  public selectedProduct = computed(() => {
+  protected selectedProduct = computed(() => {
     return this.productsStore.selectedProduct();
+  });
+
+  protected productionYears = computed(() => {
+    if (!this.productsStore.selectedProduct()) return [];
+    const copy = structuredClone(
+      this.productsStore.selectedProduct()!.production
+    );
+    const years = new Set();
+
+    for (let production of copy) {
+      if (!production.date) break;
+      const moonLanding = new Date(production.date);
+      const year = moonLanding.getFullYear();
+      years.add(year);
+    }
+    return Array.from(years).sort().reverse();
   });
 
   constructor() {
@@ -97,8 +115,6 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
 
       this.productsStore.getProductsOrders().subscribe(() => {
         this.updatedCharts();
-
-
       });
     });
   }
@@ -107,7 +123,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  productionYearChart(year: number) {}
+  productionYearChart(year: any) {
+    this.selectedProductionYear.set(year);
+    this.updatedCharts();
+  }
 
   initForm() {
     this.form = this.formBuilder.group({ date: [this.today], quantity: [0] });
@@ -142,7 +161,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const production: Production[] = this.selectedProduct()!.production.map(
+    const copy = structuredClone(this.selectedProduct()!.production);
+    const production: Production[] = copy.map(
       (element: Production, index: number): Production => {
         return index == this.editElementIndex
           ? { ...this.editElement }
@@ -169,24 +189,42 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     // console.log(this.editElement)
   }
 
-  onDeleteProduction() {}
+  protected onDeleteProduction(index: number) {
+    if (!this.selectedProduct()) {
+      this.onCancel();
+      return;
+    }
+
+    const copy = structuredClone(this.selectedProduct()!.production);
+    copy.splice(index, 1);
+
+    const product: any = {
+      // const product: Product = {
+      ...this.selectedProduct(),
+      production: [...copy],
+    };
+
+    this.productsStore.editProduct(product);
+
+    this.updatedCharts();
+  }
 
   private updatedCharts(): void {
-
     // updates column chart
     this.dataSource.data = this.selectedProduct()?.production || [];
     let data = new Array(12).fill(0);
     this.dataSource.data.forEach((prod) => {
       const moonLanding = new Date(prod.date);
-      const month = moonLanding.getMonth();
-      data[month] = prod.quantity;
+
+      if (this.selectedProductionYear() === moonLanding.getFullYear()) {
+        const month = moonLanding.getMonth();
+        data[month] = prod.quantity;
+      }
     });
 
     this.chartDataProduction.update((values: any) => {
       return [{ name: 'Količina', data }];
     });
-
-
 
     // updates pie chart
     let quantityOrders = 0;

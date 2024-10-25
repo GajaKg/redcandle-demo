@@ -5,7 +5,7 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import {Product, Production} from '../../interfaces/product.interface';
+import { Product, Production } from '../../interfaces/product.interface';
 import { computed, inject } from '@angular/core';
 import { ClientsStore } from '../clients/clients.store';
 import Client from '../../interfaces/client.interface';
@@ -44,7 +44,7 @@ export const ProductsStore = signalStore(
           tap(({ products, orders }) => {
             // @TODO remove after adding backend
             if (store.products().length) return;
-          
+
             patchState(store, (state) => ({
               products: [...products],
             }));
@@ -68,6 +68,7 @@ export const ProductsStore = signalStore(
             return productEl.id == +productId
               ? {
                   ...productEl,
+                  amount: productEl.amount + +developed.quantity! || 0,
                   production: [...productEl.production, developed],
                 }
               : productEl;
@@ -83,11 +84,19 @@ export const ProductsStore = signalStore(
       },
       editProduct(product: Product) {
         patchState(store, (state) => ({
-          products: state.products.map((productEl: Product) =>
-            productEl.id === product.id
-              ? { ...product, production: [...product.production] }
-              : productEl
-          ),
+          products: state.products.map((productEl: Product) => {
+            const orders = state.orders.filter((orderEl) => orderEl.productId == product.id)
+            const sumProduction = product.production.reduce((total, object) => total + object.quantity!, 0);
+            const sumProductOrders = orders.reduce((total, object) => total + object.quantity!, 0);
+
+            return productEl.id === product.id
+              ? {
+                  ...product,
+                  amount:  +sumProduction - +sumProductOrders,
+                  production: [...product.production],
+                }
+              : productEl;
+          }),
         }));
       },
       findProductById(id: number) {

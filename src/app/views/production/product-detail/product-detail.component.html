@@ -116,7 +116,7 @@
               </button>
               }
             </div>
-            <button (click)="onDeleteProduction()">
+            <button (click)="onDeleteProduction(i)">
               <mat-icon class="text-red-700">delete</mat-icon>
             </button>
           </td>
@@ -140,15 +140,11 @@
   <app-card>
     <app-title-card>Grafik proizvodnje po mesecima</app-title-card>
     <mat-chip-listbox aria-label="Grafik proizvodnje za godinu">
-      <mat-chip-option (click)="productionYearChart(2024)" selected>
-        2024
-      </mat-chip-option>
-      <mat-chip-option (click)="productionYearChart(2023)">
-        2023
-      </mat-chip-option>
-      <mat-chip-option (click)="productionYearChart(2022)">
-        2022
-      </mat-chip-option>
+      @for (item of productionYears(); track $index) {
+        <mat-chip-option (click)="productionYearChart(item)" [selected]="currentYear() == item">
+          {{item}}
+        </mat-chip-option>
+      }
     </mat-chip-listbox>
     <app-chart-column [data]="chartDataProduction()" />
   </app-card>
