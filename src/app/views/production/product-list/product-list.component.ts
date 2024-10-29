@@ -40,7 +40,7 @@ export class ProductListComponent {
   private readonly storeProducts = inject(ProductsStore);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  protected displayedColumns: string[] = ['id', 'product', 'amount', 'actions'];
+  protected displayedColumns: string[] = ['id', 'product', 'amount', 'stockCapacity', 'actions'];
 
   protected readonly products = computed(() => this.storeProducts.products());
   public dataSource = new MatTableDataSource<Product>(this.products());
@@ -62,12 +62,14 @@ export class ProductListComponent {
   onSubmit(product: Partial<Product>) {
     const name = product.product || "";
     const quantity = product.amount || 0;
+    const stockCapacity = product.stockCapacity || 0;
     const id = this.products().length + 1;
 
     this.storeProducts.addProduct({
       id: id,
       product: name,
       amount: quantity,
+      stockCapacity: stockCapacity,
       production: [],
     });
   }

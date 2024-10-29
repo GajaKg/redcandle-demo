@@ -1,4 +1,4 @@
-@if(chartOptions['xaxis']) {
+@if(chartOptions['chart']['type'] === 'bar') {
 <apx-chart
   #chartObj
   [series]="chartOptions['series']"
@@ -6,12 +6,15 @@
   [xaxis]="chartOptions['xaxis']"
   [colors] = "['#eb1616', '#388e3c', '#2E294E', '#F46036', '#E2C044']"
 />
-} @else {
+} @else if (chartOptions['chart']['type'] === 'pie') {
 <apx-chart
   #chartObj
   [series]="chartOptions['series']"
   [chart]="chartOptions['chart']"
   [labels]="chartOptions['labels']"
+  [dataLabels]="chartOptions['dataLabels']"
+  [tooltip]="chartOptions['tooltip']"
+  [legend]="chartOptions['legend']"
   [colors] = "['#eb1616', '#388e3c', '#2E294E', '#F46036', '#E2C044']"
 />
 }

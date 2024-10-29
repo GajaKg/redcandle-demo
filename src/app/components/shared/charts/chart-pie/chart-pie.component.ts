@@ -1,16 +1,22 @@
-import { Component, effect, input } from "@angular/core";
+import { Component, effect, input } from '@angular/core';
 import {
   ApexNonAxisChartSeries,
   ApexResponsive,
-  ApexChart
-} from "ng-apexcharts";
-import { ChartBaseComponent } from "../chart-base/chart-base.component";
+  ApexChart,
+  ApexDataLabels,
+  ApexTooltip,
+  ApexLegend,
+} from 'ng-apexcharts';
+import { ChartBaseComponent } from '../chart-base/chart-base.component';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
+  dataLabels: ApexDataLabels;
+  tooltip: ApexTooltip;
+  legend: ApexLegend;
 };
 
 @Component({
@@ -18,7 +24,7 @@ export type ChartOptions = {
   standalone: true,
   imports: [ChartBaseComponent],
   templateUrl: './chart-pie.component.html',
-  styleUrl: './chart-pie.component.scss'
+  styleUrl: './chart-pie.component.scss',
 })
 export class ChartPieComponent {
   public data = input<any>([]);
@@ -27,30 +33,40 @@ export class ChartPieComponent {
   constructor() {
     this.chartOptions = {
       series: [],
-      // series: [44, 55, 13, 43, 22],
       chart: {
         width: 380,
-        type: "pie"
+        type: 'pie',
       },
-      labels: ["Slobodan prostor", "Zauzeto"],
-      // responsive: [
-      //   {
-      //     breakpoint: 480,
-      //     options: {
-      //       chart: {
-      //         width: 200
-      //       },
-      //       legend: {
-      //         position: "bottom"
-      //       }
-      //     }
-      //   }
-      // ]
+      labels: ['Zauzeto', 'Slobodan prostor'],
+      dataLabels: {
+        formatter: function (val, opts) {
+          return opts.w.config.series[opts.seriesIndex];
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function (val, opts) {
+            //  let percent = opts.globals.seriesPercent[opts.seriesIndex][opts.dataPointIndex];
+            const percent = opts.globals.seriesPercent[opts.seriesIndex][0];
+            const value = percent ? percent.toFixed(0) + '%' : percent + '%';
+            return `<span class='text-white'>${value}</span>`;
+          },
+          title: {
+            formatter: function (seriesName) {
+              return `<span class='text-white'>${seriesName}: </span>`;
+            },
+          },
+        },
+      },
+      legend: {
+        formatter: function (legendName) {
+          return `<span class='text-white'>${legendName}</span>`;
+        },
+      },
     };
 
     effect(() => {
       this.chartOptions.series = this.data();
-    })
-
+    });
   }
 }

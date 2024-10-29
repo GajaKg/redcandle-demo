@@ -7,5 +7,6 @@ export interface Product {
   id: number;
   product: string;
   amount: number;
+  stockCapacity: number;
   production: Production[] | []
 }

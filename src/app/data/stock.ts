@@ -1,0 +1,1 @@
+export const stockCapacity: number = 20000;

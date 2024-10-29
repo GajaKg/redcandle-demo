@@ -37,6 +37,7 @@ export class ProductFormComponent {
   @Output() public submitEmit = new EventEmitter<{
     name: string;
     amount: number;
+    capacity: number;
   }>();
 
   ngOnInit() {
@@ -51,12 +52,14 @@ export class ProductFormComponent {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       amount: ['', [Validators.required]],
+      capacity: ['', [Validators.required]],
     });
   }
 
   onSubmit() {
     if (
       this.form.controls['name'].errors ||
+      this.form.controls['capacity'].errors ||
       this.form.controls['amount'].errors
     ) {
       alert('Unesite podatke');
@@ -65,8 +68,9 @@ export class ProductFormComponent {
 
     const name = this.form.controls['name'].value;
     const amount = this.form.controls['amount'].value;
+    const capacity = this.form.controls['capacity'].value;
 
-    this.submitEmit.emit({ name, amount });
+    this.submitEmit.emit({ name, amount, capacity });
     this.form.reset();
   }
 

@@ -68,7 +68,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   protected readonly today = new FormControl(new Date());
   protected form!: FormGroup;
   protected productId?: number;
-  protected chartData: number[] = [];
+  // protected chartData: number[] = [];
+  protected chartData: any = signal([]);
   protected chartDataProduction: any = signal([]);
   protected currentYear: any = signal(new Date().getFullYear());
   protected selectedProductionYear: any = signal(new Date().getFullYear());
@@ -226,14 +227,17 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       return [{ name: 'Količina', data }];
     });
 
-    // updates pie chart
-    let quantityOrders = 0;
-    this.productsStore.allOrders().forEach((order: any) => {
-      if (order.productId == this.productId) {
-        quantityOrders += order.quantity;
-      }
+    this.chartData.update((values: any) => {
+      return [
+        this.selectedProduct()!.amount || 0,
+        this.selectedProduct()!.stockCapacity -
+          this.selectedProduct()!.amount || 0,
+      ];
     });
-
-    this.chartData.push(4000, quantityOrders);
+    // this.chartData.push(
+    //   this.selectedProduct()!.amount || 0,
+    //   this.selectedProduct()!.stockCapacity - this.selectedProduct()!.amount ||
+    //     0
+    // );
   }
 }

@@ -3,6 +3,7 @@ export const chartColumnOptions: any = {
   chart: {
     type: 'bar',
     height: 350,
+    width: '100%'
   },
   plotOptions: {
     bar: {

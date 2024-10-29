@@ -3,6 +3,7 @@
     "id": 1,
     "product": "Žižak",
     "amount": 3500,
+    "stockCapacity": 20000,
     "production": [
       {
         "date": "Sun Jun 23 2024 00:00:00 GMT+0100 (Central European Standard Time)",
@@ -14,6 +15,18 @@
       }
     ]
   },
-  { "id": 2, "product": "Čašice", "amount": 3000, "production": [] },
-  { "id": 3, "product": "Sveċe", "amount": 500, "production": [] }
+  {
+    "id": 2,
+    "product": "Čašice",
+    "amount": 3000,
+    "stockCapacity": 15000,
+    "production": []
+  },
+  {
+    "id": 3,
+    "product": "Sveċe",
+    "amount": 500,
+    "stockCapacity": 10000,
+    "production": []
+  }
 ]
