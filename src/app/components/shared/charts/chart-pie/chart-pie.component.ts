@@ -1,23 +1,6 @@
 import { Component, effect, input } from '@angular/core';
-import {
-  ApexNonAxisChartSeries,
-  ApexResponsive,
-  ApexChart,
-  ApexDataLabels,
-  ApexTooltip,
-  ApexLegend,
-} from 'ng-apexcharts';
 import { ChartBaseComponent } from '../chart-base/chart-base.component';
-
-export type ChartOptions = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: any;
-  dataLabels: ApexDataLabels;
-  tooltip: ApexTooltip;
-  legend: ApexLegend;
-};
+import { ChartOptionsPie } from '../../../../interfaces/chart.type';
 
 @Component({
   selector: 'app-chart-pie',
@@ -28,7 +11,7 @@ export type ChartOptions = {
 })
 export class ChartPieComponent {
   public data = input<any>([]);
-  public chartOptions: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptionsPie>;
 
   constructor() {
     this.chartOptions = {
