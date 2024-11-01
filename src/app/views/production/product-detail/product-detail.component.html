@@ -1,7 +1,7 @@
 <div class="row grid grid-flow-col justify-stretch gap-4">
   <app-card>
     <h6 class="mb-2 text-xl font-bold">{{ selectedProduct()?.product }}</h6>
-    <p>Detalji o proizvodu</p>
+    <p>Kapacitet magacina za dati proizvod: {{ selectedProduct()?.stockCapacity }}</p>
   </app-card>
   <app-card>
     <app-chart-pie [data]="chartData()" />

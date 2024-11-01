@@ -1,10 +1,10 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
   inject,
-  OnInit,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -42,6 +42,7 @@ import { ClientsStore } from '../../store/clients/clients.store';
   ],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientsComponent implements AfterViewInit {
   private router = inject(Router);
@@ -69,14 +70,14 @@ export class ClientsComponent implements AfterViewInit {
     });
   }
 
-
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
   onSubmit(client: any) {
-    // const id = this.clients().length + 1;
-    const id = Symbol();
+    const id = this.clients().length + 1;
+    // const id: unique symbol = Symbol(client.name);
+    console.log(id)
     this.storeClients.addClient({ id, ...client });
   }
 

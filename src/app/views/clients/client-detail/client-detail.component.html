@@ -35,7 +35,7 @@
 
             <mat-form-field class="w-1/2">
               <span class="text-red-800 text-xs"> </span>
-              <mat-label>Količina {{ productQuantity }}</mat-label>
+              <mat-label>Količina {{ productQuantity() }}</mat-label>
               <input
                 formControlName="quantity"
                 matInput
@@ -45,7 +45,7 @@
               <mat-error class="text-red-800 text-xs">
                 Na stanju:
                 <strong class="text-red-800 text-xs">{{
-                  productQuantity
+                  productQuantity()
                 }}</strong>
               </mat-error>
             </mat-form-field>
@@ -141,20 +141,20 @@
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef>Količina</th>
           <td mat-cell *matCellDef="let element">
-            @if(element.id == editOrder?.id) {
+            @if(element.id == editOrder()?.id) {
 
             <mat-form-field style="max-width: 130px">
-              <mat-label>Količina {{ productQuantity }}</mat-label>
+              <mat-label>Količina {{ productQuantity() }}</mat-label>
               <input
-                [(ngModel)]="editOrder!.quantity"
+                [(ngModel)]="editOrder!().quantity"
                 matInput
-                [max]="+productQuantity"
+                [max]="+productQuantity()"
                 type="number"
               />
               <mat-error class="text-red-800 text-xs">
                 Na stanju:
                 <strong class="text-red-800 text-xs">{{
-                  productQuantity
+                  productQuantity()
                 }}</strong>
               </mat-error>
             </mat-form-field>
@@ -168,15 +168,15 @@
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Datum upisa</th>
           <td mat-cell *matCellDef="let element">
-            @if(element.id == editOrder?.id) {
+            @if(element.id == editOrder()?.id) {
             <mat-form-field style="max-width: 170px">
               <mat-label>Datum upisa</mat-label>
               <input
-                (ngModel)="(editOrder.date)"
-                [formControl]="editOrder.date"
+                (ngModel)="(editOrder().date)"
+                [formControl]="editOrder().date"
                 matInput
                 [matDatepicker]="date"
-                [max]="editOrder.dateDelivery.value"
+                [max]="editOrder().dateDelivery.value"
               />
               <mat-datepicker-toggle
                 matIconSuffix
@@ -195,15 +195,15 @@
         <ng-container matColumnDef="dateDelivery">
           <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
           <td mat-cell *matCellDef="let element">
-            @if(element.id == editOrder?.id) {
+            @if(element.id == editOrder()?.id) {
             <mat-form-field style="max-width: 170px">
               <mat-label>Datum dostave</mat-label>
               <input
-                (ngModel)="(editOrder.dateDelivery)"
-                [formControl]="editOrder.dateDelivery"
+                (ngModel)="(editOrder().dateDelivery)"
+                [formControl]="editOrder().dateDelivery"
                 matInput
                 [matDatepicker]="dateDelivery"
-                [min]="editOrder.date.value"
+                [min]="editOrder().date.value"
               />
               <mat-datepicker-toggle
                 matIconSuffix
@@ -221,8 +221,8 @@
         <ng-container matColumnDef="paid">
           <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
           <td mat-cell *matCellDef="let element">
-            @if(element.id == editOrder?.id) {
-            <mat-slide-toggle [(ngModel)]="editOrder!.paid" />
+            @if(element.id == editOrder()?.id) {
+            <mat-slide-toggle [(ngModel)]="editOrder()!.paid" />
             } @else {
             <mat-icon
               [class]="element.paid ? 'text-green-700' : 'text-red-700'"
@@ -237,8 +237,8 @@
         <ng-container matColumnDef="delivered">
           <th mat-header-cell *matHeaderCellDef>Isporučeno</th>
           <td mat-cell *matCellDef="let element">
-            @if(element.id == editOrder?.id) {
-            <mat-slide-toggle [(ngModel)]="editOrder!.delivered" />
+            @if(element.id == editOrder()?.id) {
+            <mat-slide-toggle [(ngModel)]="editOrder()!.delivered" />
             } @else {
             <mat-icon
               [class]="element.delivered ? 'text-green-700' : 'text-red-700'"
@@ -262,7 +262,7 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element" class="w-36 !text-right">
             <div class="inline mr-8">
-              @if(element.id == editOrder?.id) {
+              @if(element.id == editOrder()?.id) {
               <button (click)="onCancel()" class="mr-2">
                 <mat-icon class="text-red-700">cancel</mat-icon>
               </button>

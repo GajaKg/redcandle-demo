@@ -1,9 +1,11 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
   inject,
   OnInit,
+  signal,
   Signal,
   ViewChild,
 } from '@angular/core';
@@ -60,6 +62,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -70,9 +73,12 @@ export class ClientDetailComponent implements OnInit {
   protected form!: FormGroup;
 
   protected readonly today = new FormControl(new Date());
-  protected selectedId!: number;
-  protected productQuantity!: number;
-  protected editOrder?: any;
+  // protected selectedId!: number;
+  // protected productQuantity!: number;
+  // protected editOrder?: any;
+  protected selectedId = signal<number | undefined>(undefined);
+  protected productQuantity = signal<number>(0);
+  protected editOrder = signal<any>(undefined);
 
   protected selectedClient: Signal<Client | undefined> = computed(() =>
     this.clientStore.getSelectedClient()
@@ -137,7 +143,8 @@ export class ClientDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      this.selectedId = params['id'];
+      // this.selectedId = params['id'];
+      this.selectedId.set(params['id']);
       this.clientStore.setSelectedClientId(params['id']);
     });
 
@@ -164,12 +171,12 @@ export class ClientDetailComponent implements OnInit {
 
   onSelectProduct(productId: number) {
     const product = this.productStore.findProductById(productId);
-    this.productQuantity = product ? product?.amount : 0;
+    // this.productQuantity = product ? product?.amount : 0;
+    this.productQuantity.set(product ? product?.amount : 0);
     this.form.get('amount')?.patchValue(product ? product?.amount : 0);
   }
 
   onSubmit() {
-    console.log(this.form);
     if (
       this.form.controls['product'].errors ||
       this.form.controls['quantity'].errors ||
@@ -220,22 +227,22 @@ export class ClientDetailComponent implements OnInit {
     };
     const product = this.productStore.findProductById(order.productId);
     this.productQuantity = product
-      ? +product?.amount + this.editOrder.quantity
+      ? +product?.amount + this.editOrder().quantity
       : 0;
   }
 
   onEditOrderConfirmed() {
     const copyOrder = {
-      id: this.editOrder.id,
-      clientId: this.editOrder.clientId,
-      clientName: this.editOrder.clientName,
-      productId: this.editOrder.productId,
-      quantity: this.editOrder.quantity,
-      paid: this.editOrder.paid,
-      date: this.editOrder.date.value,
-      dateDelivery: this.editOrder.dateDelivery.value,
-      delivered: this.editOrder.delivered,
-      note: this.editOrder.note,
+      id: this.editOrder().id,
+      clientId: this.editOrder().clientId,
+      clientName: this.editOrder().clientName,
+      productId: this.editOrder().productId,
+      quantity: this.editOrder().quantity,
+      paid: this.editOrder().paid,
+      date: this.editOrder().date.value,
+      dateDelivery: this.editOrder().dateDelivery.value,
+      delivered: this.editOrder().delivered,
+      note: this.editOrder().note,
       // ...this.editOrder,
       // date: this.editOrder.date.value,
       // dateDelivery: this.editOrder.dateDelivery.value,
@@ -245,13 +252,13 @@ export class ClientDetailComponent implements OnInit {
     // copyOrder.date = this.editOrder.date.value;
     // copyOrder.dateDelivery = this.editOrder.dateDelivery.value;
 
-    if (this.editOrder && this.editOrder.quantity <= this.productQuantity) {
-      this.productStore.editOrder(copyOrder, this.productQuantity);
-      this.editOrder = null;
+    if (this.editOrder && this.editOrder().quantity <= this.productQuantity) {
+      this.productStore.editOrder(copyOrder, this.productQuantity());
+      this.editOrder.set(null);
     }
   }
 
   onCancel() {
-    this.editOrder = null;
+    this.editOrder.set(null);
   }
 }
