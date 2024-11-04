@@ -75,9 +75,9 @@ export class ClientsComponent implements AfterViewInit {
   }
 
   onSubmit(client: any) {
-    const id = this.clients().length + 1;
+    const id = this.clients().length + randomIntFromInterval(10, 100);
+    // const id = this.clients().length + 1;
     // const id: unique symbol = Symbol(client.name);
-    console.log(id)
     this.storeClients.addClient({ id, ...client });
   }
 
@@ -103,4 +103,8 @@ export class ClientsComponent implements AfterViewInit {
   navigate(clientId: number) {
     this.router.navigate([Route.ClientDetail, clientId]);
   }
+}
+
+function randomIntFromInterval(min: number, max: number) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }

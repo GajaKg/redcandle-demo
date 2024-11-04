@@ -62,7 +62,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -73,10 +73,7 @@ export class ClientDetailComponent implements OnInit {
   protected form!: FormGroup;
 
   protected readonly today = new FormControl(new Date());
-  // protected selectedId!: number;
-  // protected productQuantity!: number;
-  // protected editOrder?: any;
-  protected selectedId = signal<number | undefined>(undefined);
+  protected selectedId = signal<number>(0);
   protected productQuantity = signal<number>(0);
   protected editOrder = signal<any>(undefined);
 
@@ -100,7 +97,8 @@ export class ClientDetailComponent implements OnInit {
       );
 
       if (columnProduct) {
-        columnProduct.data[month] = (columnProduct.data[month] || 0) + order.quantity;
+        columnProduct.data[month] =
+          (columnProduct.data[month] || 0) + order.quantity;
       } else {
         let data = new Array(12).fill(0);
         data[month] = order.quantity;
@@ -171,7 +169,6 @@ export class ClientDetailComponent implements OnInit {
 
   onSelectProduct(productId: number) {
     const product = this.productStore.findProductById(productId);
-    // this.productQuantity = product ? product?.amount : 0;
     this.productQuantity.set(product ? product?.amount : 0);
     this.form.get('amount')?.patchValue(product ? product?.amount : 0);
   }
@@ -198,9 +195,8 @@ export class ClientDetailComponent implements OnInit {
     const note = this.form.controls['note'].value;
 
     this.productStore.addOrder({
-      id: Symbol(),
-      // id: this.orders().length + 1,
-      clientId: +this.selectedId,
+      id: this.orders().length + randomIntFromInterval(10, 100),
+      clientId: +this.selectedId(),
       productId,
       quantity,
       date,
@@ -213,6 +209,7 @@ export class ClientDetailComponent implements OnInit {
     alert('Uspešna uneta porudžbina!');
 
     this.form.reset();
+    this.productQuantity.set(0);
   }
 
   onDeleteOrder(id: number) {
@@ -220,15 +217,19 @@ export class ClientDetailComponent implements OnInit {
   }
 
   onEditOrder(order: any) {
-    this.editOrder = {
-      ...order,
-      date: new FormControl(new Date(order.date)),
-      dateDelivery: new FormControl(new Date(order.dateDelivery)),
-    };
+
+    this.editOrder.update((values: any) => {
+      return {
+        ...order,
+        date: new FormControl(new Date(order.date)),
+        dateDelivery: new FormControl(new Date(order.dateDelivery)),
+      };
+    });
+
     const product = this.productStore.findProductById(order.productId);
-    this.productQuantity = product
-      ? +product?.amount + this.editOrder().quantity
-      : 0;
+    this.productQuantity.set(
+      product ? +product?.amount + this.editOrder().quantity : 0
+    );
   }
 
   onEditOrderConfirmed() {
@@ -248,11 +249,7 @@ export class ClientDetailComponent implements OnInit {
       // dateDelivery: this.editOrder.dateDelivery.value,
     };
 
-    // const copyOrder = structuredClone(this.editOrder);
-    // copyOrder.date = this.editOrder.date.value;
-    // copyOrder.dateDelivery = this.editOrder.dateDelivery.value;
-
-    if (this.editOrder && this.editOrder().quantity <= this.productQuantity) {
+    if (this.editOrder && this.editOrder().quantity <= this.productQuantity()) {
       this.productStore.editOrder(copyOrder, this.productQuantity());
       this.editOrder.set(null);
     }
@@ -261,4 +258,8 @@ export class ClientDetailComponent implements OnInit {
   onCancel() {
     this.editOrder.set(null);
   }
+}
+
+function randomIntFromInterval(min: number, max: number) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }

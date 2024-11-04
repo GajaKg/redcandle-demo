@@ -1,11 +1,12 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   computed,
   effect,
   inject,
   OnInit,
-  Signal,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -60,32 +61,33 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
   providers: [provideNativeDateAdapter()],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailComponent implements OnInit, AfterViewInit {
   private readonly route = inject(ActivatedRoute);
   private readonly productsStore = inject(ProductsStore);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
   protected readonly today = new FormControl(new Date());
   protected form!: FormGroup;
   protected productId?: number;
-  // protected chartData: number[] = [];
   protected chartData: any = signal([]);
   protected chartDataProduction: any = signal([]);
   protected currentYear: any = signal(new Date().getFullYear());
   protected selectedProductionYear: any = signal(new Date().getFullYear());
-  protected editElementIndex: number | undefined;
-  protected editElement?: Production;
+  protected editElement = signal<Production | undefined>(undefined);
+  protected editElementIndex = signal<number | undefined>(undefined);
 
   // table
   protected displayedColumns: string[] = ['id', 'date', 'quantity', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  protected selectedProduct = computed(() => {
+  protected readonly selectedProduct = computed(() => {
     return this.productsStore.selectedProduct();
   });
 
-  protected productionYears = computed(() => {
+  protected readonly productionYears = computed(() => {
     if (!this.productsStore.selectedProduct()) return [];
     const copy = structuredClone(
       this.productsStore.selectedProduct()!.production
@@ -152,8 +154,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   }
 
   onCancel() {
-    this.editElementIndex = undefined;
-    this.editElement = undefined;
+    this.editElementIndex.set(undefined);
+    this.editElement.set(undefined);
   }
 
   onEditProductionConfirmed() {
@@ -165,8 +167,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     const copy = structuredClone(this.selectedProduct()!.production);
     const production: Production[] = copy.map(
       (element: Production, index: number): Production => {
-        return index == this.editElementIndex
-          ? { ...this.editElement }
+        return index == this.editElementIndex()
+          ? { ...this.editElement() }
           : element;
       }
     );
@@ -185,9 +187,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   }
 
   onEditProduction(index: number, element: Production) {
-    this.editElementIndex = index;
-    this.editElement = { ...element };
-    // console.log(this.editElement)
+    this.editElementIndex.set(index);
+    this.editElement.update((values: any) => {
+      return {...element};
+    });
   }
 
   protected onDeleteProduction(index: number) {
@@ -234,10 +237,5 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
           this.selectedProduct()!.amount || 0,
       ];
     });
-    // this.chartData.push(
-    //   this.selectedProduct()!.amount || 0,
-    //   this.selectedProduct()!.stockCapacity - this.selectedProduct()!.amount ||
-    //     0
-    // );
   }
 }

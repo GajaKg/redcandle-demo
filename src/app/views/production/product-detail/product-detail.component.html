@@ -59,11 +59,11 @@
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Datum</th>
           <td mat-cell *matCellDef="let element; let i = index">
-            @if(i == editElementIndex) {
+            @if(i == editElementIndex()) {
               <mat-form-field style="max-width: 170px">
                 <mat-label>Datum upisa</mat-label>
                 <input
-                  [(ngModel)]="(editElement!.date)"
+                  [(ngModel)]="(editElement()!.date)"
                   matInput
                   [matDatepicker]="date"
                 />
@@ -83,11 +83,11 @@
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef>Količina</th>
           <td mat-cell *matCellDef="let element; let i = index">
-            @if(i == editElementIndex) {
+            @if(i == editElementIndex()) {
             <mat-form-field style="max-width: 130px">
               <mat-label>Količina:</mat-label>
               <input
-                [(ngModel)]="editElement!.quantity"
+                [(ngModel)]="editElement()!.quantity"
                 matInput
                 type="number"
               />
@@ -103,7 +103,7 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element; let i = index" class="w-36 !text-right">
             <div class="inline mr-8">
-              @if(+i == editElementIndex) {
+              @if(+i == editElementIndex()) {
               <button (click)="onCancel()" class="mr-2">
                 <mat-icon class="text-red-700">cancel</mat-icon>
               </button>
