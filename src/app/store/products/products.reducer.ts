@@ -3,9 +3,9 @@ import { fetchProducts } from './products.actions';
 
 export const initialState = {
     products: [
-        { id: 1, product: 'Žižak', amount: 1009 },
-        { id: 2, product: 'Čašice', amount: 426 },
-        { id: 3, product: 'Sveċe', amount: 691 },
+        { id: 1, product: 'Žižak', quantity: 1009 },
+        { id: 2, product: 'Čašice', quantity: 426 },
+        { id: 3, product: 'Sveċe', quantity: 691 },
     ],
     clients: []
 };

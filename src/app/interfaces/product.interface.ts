@@ -6,7 +6,8 @@ export interface Production {
 export interface Product {
   id: number;
   product: string;
-  amount: number;
+  quantity: number;
   stockCapacity: number;
+  reserved: number,
   production: Production[] | []
 }

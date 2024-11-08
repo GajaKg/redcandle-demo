@@ -33,17 +33,17 @@
           </td>
         </ng-container>
 
-        <!-- Amount Column -->
-        <ng-container matColumnDef="amount">
+        <!-- quantity Column -->
+        <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef>Na stanju</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id == editElement?.id) {
             <mat-form-field (click)="$event.stopPropagation()">
               <mat-label>Količina</mat-label>
-              <input matInput [(ngModel)]="editElement!.amount" />
+              <input matInput [(ngModel)]="editElement!.quantity" type="number" />
             </mat-form-field>
             } @else {
-            {{ element.amount }}
+            {{ element.quantity }}
             }
           </td>
         </ng-container>
@@ -55,7 +55,7 @@
             @if(element.id == editElement?.id) {
             <mat-form-field (click)="$event.stopPropagation()">
               <mat-label>Količina</mat-label>
-              <input matInput [(ngModel)]="editElement!.stockCapacity" />
+              <input matInput [(ngModel)]="editElement!.stockCapacity" type="number" />
             </mat-form-field>
             } @else {
             {{ element.stockCapacity }}

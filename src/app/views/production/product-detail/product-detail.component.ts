@@ -61,7 +61,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
   providers: [provideNativeDateAdapter()],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailComponent implements OnInit, AfterViewInit {
   private readonly route = inject(ActivatedRoute);
@@ -126,16 +126,16 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  productionYearChart(year: any) {
+  protected productionYearChart(year: any) {
     this.selectedProductionYear.set(year);
     this.updatedCharts();
   }
 
-  initForm() {
+  private initForm() {
     this.form = this.formBuilder.group({ date: [this.today], quantity: [0] });
   }
 
-  onSubmit() {
+  protected onSubmit() {
     if (
       this.form.controls['quantity'].errors ||
       this.form.controls['date'].errors ||
@@ -144,39 +144,49 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       alert('Unesite podatke');
       return;
     }
-
+    const copyProduct = structuredClone(this.selectedProduct()!);
     const quantity: number = +this.form.controls['quantity'].value;
     const date: string | Date = this.form.controls['date'].value;
     const production: Production = { date: date, quantity: quantity };
-    this.productsStore.addProduction(this.productId, production);
+
+    copyProduct.quantity += quantity;
+
+    const productPayload: Product = {
+      ...copyProduct,
+      production: [...copyProduct.production, production],
+    };
+    this.productsStore.editProduct(productPayload);
+    // this.productsStore.addProduction(this.productId, production);
 
     this.updatedCharts();
   }
 
-  onCancel() {
+  protected onCancel() {
     this.editElementIndex.set(undefined);
     this.editElement.set(undefined);
   }
 
-  onEditProductionConfirmed() {
+  protected onEditProductionConfirmed() {
     if (!this.selectedProduct()) {
       this.onCancel();
       return;
     }
 
-    const copy = structuredClone(this.selectedProduct()!.production);
-    const production: Production[] = copy.map(
-      (element: Production, index: number): Production => {
-        return index == this.editElementIndex()
-          ? { ...this.editElement() }
-          : element;
-      }
-    );
+    const copyProduct = structuredClone(this.selectedProduct()!);
+    const productionToEdit = copyProduct.production[this.editElementIndex()!];
+
+    // Calculate Product quantity before change production quantity (code below)
+    // const calculateProductQuantity = copyProduct.quantity + (this.editElement()!.quantity! - productionToEdit.quantity!);
+    // copyProduct.quantity = calculateProductQuantity;
+    copyProduct.quantity += this.editElement()!.quantity! - productionToEdit.quantity!;
+
+    // Edit production
+    copyProduct.production[this.editElementIndex()!] = { ...this.editElement() };
 
     const product: any = {
       // const product: Product = {
-      ...this.selectedProduct(),
-      production: [...production],
+      ...copyProduct,
+      production: [...copyProduct.production],
     };
 
     this.productsStore.editProduct(product);
@@ -186,10 +196,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     this.onCancel();
   }
 
-  onEditProduction(index: number, element: Production) {
+  protected onEditProduction(index: number, element: Production) {
     this.editElementIndex.set(index);
     this.editElement.update((values: any) => {
-      return {...element};
+      return { ...element };
     });
   }
 
@@ -199,13 +209,14 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const copy = structuredClone(this.selectedProduct()!.production);
-    copy.splice(index, 1);
+    const copyProduct = structuredClone(this.selectedProduct()!);
+    copyProduct.quantity -= copyProduct.production[index].quantity! || 0;
+    copyProduct.production.splice(index, 1);
 
     const product: any = {
       // const product: Product = {
-      ...this.selectedProduct(),
-      production: [...copy],
+      ...copyProduct,
+      production: [...copyProduct.production],
     };
 
     this.productsStore.editProduct(product);
@@ -216,6 +227,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   private updatedCharts(): void {
     // updates column chart
     this.dataSource.data = this.selectedProduct()?.production || [];
+    console.log(this.selectedProduct()?.production);
     let data = new Array(12).fill(0);
     this.dataSource.data.forEach((prod) => {
       const moonLanding = new Date(prod.date);
@@ -232,9 +244,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
 
     this.chartData.update((values: any) => {
       return [
-        this.selectedProduct()!.amount || 0,
+        this.selectedProduct()!.quantity || 0,
+        this.selectedProduct()!.reserved || 0,
         this.selectedProduct()!.stockCapacity -
-          this.selectedProduct()!.amount || 0,
+          this.selectedProduct()!.quantity || 0,
       ];
     });
   }

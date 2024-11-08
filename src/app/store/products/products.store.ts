@@ -6,6 +6,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { Product, Production } from '../../interfaces/product.interface';
+import { Order } from '../../interfaces/order.interface';
 import { computed, inject } from '@angular/core';
 import { ClientsStore } from '../clients/clients.store';
 import Client from '../../interfaces/client.interface';
@@ -62,19 +63,6 @@ export const ProductsStore = signalStore(
         }));
         // patchState(store, { isLoading: false });
       },
-      addProduction(productId: number, developed: Production) {
-        patchState(store, (state) => ({
-          products: state.products.map((productEl: Product) => {
-            return productEl.id == +productId
-              ? {
-                  ...productEl,
-                  amount: productEl.amount + +developed.quantity! || 0,
-                  production: [...productEl.production, developed],
-                }
-              : productEl;
-          }),
-        }));
-      },
       deleteProduct(id: number) {
         patchState(store, (state) => ({
           products: state.products.filter((productEl: Product) => {
@@ -85,15 +73,9 @@ export const ProductsStore = signalStore(
       editProduct(product: Product) {
         patchState(store, (state) => ({
           products: state.products.map((productEl: Product) => {
-            const orders = state.orders.filter((orderEl) => orderEl.productId == product.id)
-            const sumProduction = product.production.reduce((total, object) => total + object.quantity!, 0);
-            const sumProductOrders = orders.reduce((total, object) => total + object.quantity!, 0);
-
             return productEl.id === product.id
               ? {
                   ...product,
-                  amount:  +sumProduction - +sumProductOrders,
-                  production: [...product.production],
                 }
               : productEl;
           }),
@@ -105,12 +87,20 @@ export const ProductsStore = signalStore(
       setSelectedProductId(id: number) {
         patchState(store, { selectedProductId: id });
       },
-      addOrder(order: any) {
+      addOrder(order: Partial<Order>) {
         patchState(store, (state) => ({
           products: state.products.map((product: Product) => {
-            return product.id === order.productId
-              ? { ...product, amount: product.amount - order.quantity }
-              : product;
+            if (product.id === order.productId) {
+              const quantity = order.delivered
+                ? product.quantity - (order.quantity || 0)
+                : product.quantity;
+              return {
+                ...product,
+                quantity: quantity,
+              };
+            } else {
+              return product;
+            }
           }),
         }));
 
@@ -118,7 +108,11 @@ export const ProductsStore = signalStore(
           orders: [...state.orders, order],
         }));
       },
-      editOrder(order: any, productQuantity: number) {
+      editOrder(
+        order: Order,
+        orderEditDiffQuantity: number,
+        orderDeliveredOldValue: boolean
+      ) {
         patchState(store, (state) => ({
           orders: state.orders.map((orderEl) => {
             return orderEl.id === order.id ? order : orderEl;
@@ -126,18 +120,65 @@ export const ProductsStore = signalStore(
         }));
         patchState(store, (state) => ({
           products: state.products.map((product: Product) => {
-            return product.id === order.productId
-              ? { ...product, amount: productQuantity - order.quantity || 0 }
-              : product;
+            if (product.id === order.productId) {
+
+              let reserved: number = !orderDeliveredOldValue
+                ? product.reserved - (order.quantity + orderEditDiffQuantity)
+                : product.reserved;
+              let quantity: number = product.quantity + orderEditDiffQuantity;
+
+              if (!order.delivered) {
+                reserved = orderDeliveredOldValue
+                  ? product.reserved + order.quantity
+                  : product.reserved - orderEditDiffQuantity;
+              }
+
+              return {
+                ...product,
+                reserved: reserved,
+                quantity: quantity,
+              };
+            } else {
+              return product;
+            }
           }),
         }));
       },
       deleteOrder(id: number) {
+        let foundProduct: Product | undefined;
+
+        const orders = store.orders().filter((orderEl: Order) => {
+          if (orderEl.id !== id) {
+            return true;
+          } else {
+            if (!orderEl.delivered) {
+              foundProduct = store
+                .products()
+                .find((product: Product) => product.id === orderEl.productId);
+
+              if (foundProduct) {
+                foundProduct.quantity += orderEl.quantity;
+                foundProduct.reserved -= orderEl.quantity;
+              }
+            }
+
+            return false;
+          }
+        });
+
         patchState(store, (state) => ({
-          orders: state.orders.filter((orderEl: any) => {
-            return orderEl.id !== id;
-          }),
+          orders: orders,
         }));
+
+        if (foundProduct) {
+          this.editProduct(foundProduct);
+        }
+
+        // patchState(store, (state) => ({
+        //   orders: state.orders.filter((orderEl: any) => {
+        //     return orderEl.id !== id;
+        //   }),
+        // }));
       },
     })
   ),

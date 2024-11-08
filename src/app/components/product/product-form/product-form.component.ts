@@ -36,7 +36,7 @@ export class ProductFormComponent {
   protected form!: FormGroup;
   @Output() public submitEmit = new EventEmitter<{
     name: string;
-    amount: number;
+    quantity: number;
     capacity: number;
   }>();
 
@@ -51,7 +51,7 @@ export class ProductFormComponent {
   initForm() {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      amount: ['', [Validators.required]],
+      quantity: ['', [Validators.required]],
       capacity: ['', [Validators.required]],
     });
   }
@@ -60,17 +60,17 @@ export class ProductFormComponent {
     if (
       this.form.controls['name'].errors ||
       this.form.controls['capacity'].errors ||
-      this.form.controls['amount'].errors
+      this.form.controls['quantity'].errors
     ) {
       alert('Unesite podatke');
       return;
     }
 
     const name = this.form.controls['name'].value;
-    const amount = this.form.controls['amount'].value;
+    const quantity = this.form.controls['quantity'].value;
     const capacity = this.form.controls['capacity'].value;
 
-    this.submitEmit.emit({ name, amount, capacity });
+    this.submitEmit.emit({ name, quantity, capacity });
     this.form.reset();
   }
 

@@ -20,7 +20,7 @@ export class ChartPieComponent {
         width: 380,
         type: 'pie',
       },
-      labels: ['Zauzeto', 'Slobodan prostor'],
+      labels: ['Zauzeto', 'Rezervisano', 'Slobodan prostor'],
       dataLabels: {
         formatter: function (val, opts) {
           return opts.w.config.series[opts.seriesIndex];

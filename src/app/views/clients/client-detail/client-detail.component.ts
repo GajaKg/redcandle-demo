@@ -75,6 +75,8 @@ export class ClientDetailComponent implements OnInit {
   protected readonly today = new FormControl(new Date());
   protected selectedId = signal<number>(0);
   protected productQuantity = signal<number>(0);
+  protected orderDeliveredOldValue = signal<boolean>(false);
+  protected orderEditQuantity = signal<number>(0); // diff between old and new amount
   protected editOrder = signal<any>(undefined);
 
   protected selectedClient: Signal<Client | undefined> = computed(() =>
@@ -169,8 +171,8 @@ export class ClientDetailComponent implements OnInit {
 
   onSelectProduct(productId: number) {
     const product = this.productStore.findProductById(productId);
-    this.productQuantity.set(product ? product?.amount : 0);
-    this.form.get('amount')?.patchValue(product ? product?.amount : 0);
+    this.productQuantity.set(product ? product?.quantity : 0);
+    this.form.get('quantity')?.patchValue(product ? product?.quantity : 0);
   }
 
   onSubmit() {
@@ -216,7 +218,9 @@ export class ClientDetailComponent implements OnInit {
     this.productStore.deleteOrder(id);
   }
 
-  onEditOrder(order: any) {
+  onEditOrder(order: any, i: number) {
+    this.orderEditQuantity.set(order.quantity);
+    this.orderDeliveredOldValue.set(order.delivered);
 
     this.editOrder.update((values: any) => {
       return {
@@ -228,7 +232,7 @@ export class ClientDetailComponent implements OnInit {
 
     const product = this.productStore.findProductById(order.productId);
     this.productQuantity.set(
-      product ? +product?.amount + this.editOrder().quantity : 0
+      product ? +product?.quantity + this.editOrder().quantity : 0
     );
   }
 
@@ -238,7 +242,7 @@ export class ClientDetailComponent implements OnInit {
       clientId: this.editOrder().clientId,
       clientName: this.editOrder().clientName,
       productId: this.editOrder().productId,
-      quantity: this.editOrder().quantity,
+      quantity: +this.editOrder().quantity,
       paid: this.editOrder().paid,
       date: this.editOrder().date.value,
       dateDelivery: this.editOrder().dateDelivery.value,
@@ -249,9 +253,13 @@ export class ClientDetailComponent implements OnInit {
       // dateDelivery: this.editOrder.dateDelivery.value,
     };
 
+    let orderDiff = this.orderEditQuantity() - +this.editOrder().quantity;
+
     if (this.editOrder && this.editOrder().quantity <= this.productQuantity()) {
-      this.productStore.editOrder(copyOrder, this.productQuantity());
+      this.productStore.editOrder(copyOrder, orderDiff, this.orderDeliveredOldValue());
       this.editOrder.set(null);
+    } else {
+      alert("Nemate dovoljnu količinu u magacinu!");
     }
   }
 
@@ -260,6 +268,7 @@ export class ClientDetailComponent implements OnInit {
   }
 }
 
-function randomIntFromInterval(min: number, max: number) { // min and max included 
+function randomIntFromInterval(min: number, max: number) {
+  // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
