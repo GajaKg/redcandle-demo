@@ -234,7 +234,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
 
       if (this.selectedProductionYear() === moonLanding.getFullYear()) {
         const month = moonLanding.getMonth();
-        data[month] = prod.quantity;
+        data[month] += prod.quantity;
       }
     });
 
