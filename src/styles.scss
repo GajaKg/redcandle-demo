@@ -96,3 +96,16 @@ html {
   --mdc-filled-text-field-error-active-indicator-color: #eb1616 !important;
   --mdc-filled-text-field-active-indicator-color: transparent;
 }
+
+.success {
+  // snack bar
+  --mdc-snackbar-container-color: #d1e7dd;
+  --mat-snack-bar-button-color: black;
+  --mdc-snackbar-supporting-text-color: #0f5132;
+  .mdc-snackbar__label {
+    color: #0f5132;
+  }
+  .mdc-button__label {
+    color: #0f5132 !important;
+  }
+}

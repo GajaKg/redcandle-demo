@@ -28,6 +28,8 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Product, Production } from '../../../interfaces/product.interface';
 import { CardComponent } from '../../../components/shared/card/card.component';
@@ -57,6 +59,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
     MatDatepickerModule,
     DatePipe,
     MatChipsModule,
+    MatSnackBarModule,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './product-detail.component.html',
@@ -68,6 +71,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   private readonly productsStore = inject(ProductsStore);
   private readonly formBuilder = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private _snackBar = inject(MatSnackBar);
   protected readonly today = new FormControl(new Date());
   protected form!: FormGroup;
   protected productId?: number;
@@ -141,7 +145,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       this.form.controls['date'].errors ||
       !this.productId
     ) {
-      alert('Unesite podatke');
+      this._snackBar.open('Unesite podatke', 'ok', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       return;
     }
     const copyProduct = structuredClone(this.selectedProduct()!);
@@ -178,10 +185,13 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     // Calculate Product quantity before change production quantity (code below)
     // const calculateProductQuantity = copyProduct.quantity + (this.editElement()!.quantity! - productionToEdit.quantity!);
     // copyProduct.quantity = calculateProductQuantity;
-    copyProduct.quantity += this.editElement()!.quantity! - productionToEdit.quantity!;
+    copyProduct.quantity +=
+      this.editElement()!.quantity! - productionToEdit.quantity!;
 
     // Edit production
-    copyProduct.production[this.editElementIndex()!] = { ...this.editElement() };
+    copyProduct.production[this.editElementIndex()!] = {
+      ...this.editElement(),
+    };
 
     const product: any = {
       // const product: Product = {

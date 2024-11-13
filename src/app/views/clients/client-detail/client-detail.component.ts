@@ -30,6 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { CardComponent } from '../../../components/shared/card/card.component';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
@@ -59,6 +61,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
     MatIconModule,
     DatePipe,
     ChartColumnComponent,
+    MatSnackBarModule
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
@@ -66,6 +69,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
 })
 export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private _snackBar = inject(MatSnackBar);
   private readonly clientStore = inject(ClientsStore);
   // private readonly orderStore = inject(OrdersStore);
   private readonly productStore = inject(ProductsStore);
@@ -208,8 +212,12 @@ export class ClientDetailComponent implements OnInit {
       note,
     });
 
-    alert('Uspešna uneta porudžbina!');
-
+    this._snackBar.open('Uspešno uneta porudžbina!', 'ok', {
+      duration: 5000,
+      verticalPosition: 'top',
+      panelClass: ['success']
+    });
+    
     this.form.reset();
     this.productQuantity.set(0);
   }

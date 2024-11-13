@@ -16,7 +16,7 @@ import {
 })
 export class ChartBaseComponent {
   public data = input<[]>([]);
-  public options = input<ChartOptionsColumn | ChartOptionsPie>(
+  public options = input<ChartOptionsColumn | ChartOptionsPie | any>(
     chartColumnOptions
   );
 
