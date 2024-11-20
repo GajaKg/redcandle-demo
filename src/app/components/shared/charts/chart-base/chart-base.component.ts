@@ -4,6 +4,7 @@ import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
 import { chartColumnOptions } from '../chart-column-options';
 import {
   ChartOptionsColumn,
+  ChartOptionsLine,
   ChartOptionsPie,
 } from '../../../../interfaces/chart.type';
 
@@ -15,19 +16,18 @@ import {
   styleUrl: './chart-base.component.scss',
 })
 export class ChartBaseComponent {
-  public data = input<[]>([]);
-  public options = input<ChartOptionsColumn | ChartOptionsPie | any>(
+  public readonly options = input<ChartOptionsColumn | ChartOptionsPie | ChartOptionsLine | any>(
     chartColumnOptions
   );
 
   @ViewChild('chartObj') chartObj!: ChartComponent;
 
-  protected chartOptions = computed<ChartOptionsColumn | ChartOptionsPie | any>(
+  protected chartOptions = computed<ChartOptionsColumn | ChartOptionsPie | ChartOptionsLine | any>(
     () => {
       return {
         ...this.options(),
-        series: [...this.data()],
       };
     }
   );
+
 }

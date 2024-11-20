@@ -4,7 +4,7 @@
   [series]="chartOptions().series"
   [chart]="chartOptions().chart"
   [xaxis]="chartOptions().xaxis"
-  [colors] = "['#eb1616', '#388e3c', '#2E294E', '#F46036', '#E2C044']"
+  [colors]="['#eb1616', '#388e3c', '#2E294E', '#F46036', '#E2C044']"
 />
 } @else if (chartOptions().chart.type === 'pie') {
 <apx-chart
@@ -15,6 +15,18 @@
   [dataLabels]="chartOptions().dataLabels"
   [tooltip]="chartOptions().tooltip"
   [legend]="chartOptions().legend"
-  [colors] = "['#eb1616', '#2E294E', '#388e3c', '#F46036', '#E2C044']"
+  [colors]="['#eb1616', '#2E294E', '#388e3c', '#F46036', '#E2C044']"
+/>
+} @else if (chartOptions().chart.type === 'line') {
+<apx-chart
+  #chartObj
+  [series]="chartOptions().series"
+  [chart]="chartOptions().chart"
+  [xaxis]="chartOptions().xaxis"
+  [dataLabels]="chartOptions().dataLabels"
+  [grid]="chartOptions().grid"
+  [stroke]="chartOptions().stroke"
+  [title]="chartOptions().title"
+  [colors]="['#eb1616', '#2E294E', '#388e3c', '#F46036', '#E2C044']"
 />
 }

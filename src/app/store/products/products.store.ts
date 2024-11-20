@@ -121,7 +121,6 @@ export const ProductsStore = signalStore(
         patchState(store, (state) => ({
           products: state.products.map((product: Product) => {
             if (product.id === order.productId) {
-
               let reserved: number = !orderDeliveredOldValue
                 ? product.reserved - (order.quantity + orderEditDiffQuantity)
                 : product.reserved;
@@ -221,6 +220,13 @@ export const ProductsStore = signalStore(
             productName: product?.product,
           };
         });
+      }),
+      selectedProductOrders: computed(() => {
+        return store
+          .orders()
+          .filter(
+            (order: Order) => order.productId == store.selectedProductId()
+          );
       }),
       ordersBySelectedClient: computed(() => {
         const orders = store.orders().filter((order) => {

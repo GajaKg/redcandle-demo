@@ -3,11 +3,13 @@ import {
   ApexChart,
   ApexDataLabels,
   ApexFill,
+  ApexGrid,
   ApexLegend,
   ApexNonAxisChartSeries,
   ApexPlotOptions,
   ApexResponsive,
   ApexStroke,
+  ApexTitleSubtitle,
   ApexTooltip,
   ApexXAxis,
   ApexYAxis,
@@ -34,4 +36,14 @@ export type ChartOptionsPie = {
   dataLabels: ApexDataLabels;
   tooltip: ApexTooltip;
   legend: ApexLegend;
+};
+
+export type ChartOptionsLine = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  grid: ApexGrid;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
 };

@@ -37,11 +37,13 @@ import { ProductsStore } from '../../../store/products/products.store';
 import { ChartPieComponent } from '../../../components/shared/charts/chart-pie/chart-pie.component';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
 import { ChartColumnComponent } from '../../../components/shared/charts/chart-column/chart-column.component';
+import { ProductOrdersComponent } from './product-orders/product-orders.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [
+    ProductOrdersComponent,
     ChartColumnComponent,
     CardComponent,
     ChartPieComponent,
@@ -75,6 +77,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   protected readonly today = new FormControl(new Date());
   protected form!: FormGroup;
   protected productId?: number;
+  protected chartPieOpt: any = signal([]);
   protected chartData: any = signal([]);
   protected chartDataProduction: any = signal([]);
   protected currentYear: any = signal(new Date().getFullYear());
@@ -237,7 +240,6 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   private updatedCharts(): void {
     // updates column chart
     this.dataSource.data = this.selectedProduct()?.production || [];
-    console.log(this.selectedProduct()?.production);
     let data = new Array(12).fill(0);
     this.dataSource.data.forEach((prod) => {
       const moonLanding = new Date(prod.date);
