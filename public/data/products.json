@@ -1,7 +1,8 @@
 [
   {
     "id": 1,
-    "product": "Žižak",
+    "categoryId": 2,
+    "name": "Žižak",
     "quantity": 3500,
     "stockCapacity": 20000,
     "reserved": 0,
@@ -18,7 +19,8 @@
   },
   {
     "id": 2,
-    "product": "Čašice",
+    "categoryId": 3,
+    "name": "Čašice",
     "quantity": 2600,
     "reserved": 400,
     "stockCapacity": 15000,
@@ -26,7 +28,26 @@
   },
   {
     "id": 3,
-    "product": "Sveċe",
+    "categoryId": 1,
+    "name": "Sveċe P/10",
+    "quantity": 500,
+    "reserved": 4500,
+    "stockCapacity": 10000,
+    "production": []
+  },
+  {
+    "id": 4,
+    "categoryId": 1,
+    "name": "Sveċe P/20",
+    "quantity": 500,
+    "reserved": 4500,
+    "stockCapacity": 10000,
+    "production": []
+  },
+  {
+    "id": 5,
+    "categoryId": 1,
+    "name": "Sveċe P/30",
     "quantity": 500,
     "reserved": 4500,
     "stockCapacity": 10000,

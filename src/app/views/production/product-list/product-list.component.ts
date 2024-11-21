@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
@@ -23,6 +24,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     ProductFormComponent,
     FormsModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatInputModule,
     TitleCardComponent,
     MatButtonModule,
@@ -40,9 +42,17 @@ export class ProductListComponent {
   private readonly storeProducts = inject(ProductsStore);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  protected displayedColumns: string[] = ['id', 'product', 'quantity', 'stockCapacity', 'actions'];
+  protected displayedColumns: string[] = [
+    'id',
+    'product',
+    'categoryName',
+    'quantity',
+    'stockCapacity',
+    'actions',
+  ];
 
   protected readonly products = computed(() => this.storeProducts.products());
+  protected readonly categories = computed(() => this.storeProducts.categories());
   public dataSource = new MatTableDataSource<Product>(this.products());
 
   public editElement?: null | Product = null;
@@ -60,15 +70,17 @@ export class ProductListComponent {
   }
 
   onSubmit(product: Partial<Product>) {
-    const name = product.product || "";
+    const name = product.name || '';
     const reserved = product.reserved || 0;
+    const categoryId = product.categoryId || 0;
     const quantity = product.quantity || 0;
     const stockCapacity = product.stockCapacity || 0;
     const id = this.products().length + 1;
 
     this.storeProducts.addProduct({
       id: id,
-      product: name,
+      categoryId: categoryId,
+      name: name,
       quantity: quantity,
       reserved: reserved,
       stockCapacity: stockCapacity,

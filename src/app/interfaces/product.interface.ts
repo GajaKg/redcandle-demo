@@ -5,7 +5,9 @@ export interface Production {
 
 export interface Product {
   id: number;
-  product: string;
+  name: string;
+  categoryId: number;
+  categoryName: string;
   quantity: number;
   stockCapacity: number;
   reserved: number,

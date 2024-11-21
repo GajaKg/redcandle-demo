@@ -11,12 +11,14 @@ import { computed, inject } from '@angular/core';
 import { ClientsStore } from '../clients/clients.store';
 import Client from '../../interfaces/client.interface';
 import { ProductService } from '../../views/production/product.service';
-import { forkJoin, tap } from 'rxjs';
+import { forkJoin, map, tap } from 'rxjs';
 import { OrderService } from '../../views/clients/order.service';
+import { Category } from '../../interfaces/category';
 
 type ProductsState = {
-  products: Product[];
-  orders: any[];
+  products: any | Product[];
+  orders: any | Order[] | Partial<Order>[];
+  categories: any[];
   selectedProductId: number | null;
   isLoading: boolean;
 };
@@ -24,6 +26,7 @@ type ProductsState = {
 const initialState: ProductsState = {
   products: [],
   orders: [],
+  categories: [],
   selectedProductId: null,
   isLoading: false,
 };
@@ -35,31 +38,65 @@ export const ProductsStore = signalStore(
     (
       store,
       productService = inject(ProductService),
-      orderService = inject(OrderService)
+      orderService = inject(OrderService),
+      clientStore = inject(ClientsStore)
     ) => ({
       getProductsOrders() {
         return forkJoin({
+          categories: productService.fetchCategories(),
           products: productService.fetchProducts(),
           orders: orderService.fetchOrders(),
         }).pipe(
-          tap(({ products, orders }) => {
+          map(({ products, orders, categories }) => {
+            const ordersMapped = orders.map((order: Order) => {
+              const product = products.find(
+                (product: Product) => order.productId == product.id
+              );
+              const client = clientStore
+                .clients()
+                .find((client: Client) => order.clientId == client.id);
+
+              return {
+                ...order,
+                clientName: client?.name,
+                productName: product?.name,
+              };
+            });
+
+            const productsMapped = products.map((product: Product) => {
+              const category = categories.find(
+                (cat) => cat.id == product.categoryId
+              );
+              return {
+                ...product,
+                categoryName: category?.name,
+              };
+            });
+
+            return { productsMapped, ordersMapped, categories };
+          }),
+          tap(({ productsMapped, ordersMapped, categories }) => {
             // @TODO remove after adding backend
             if (store.products().length) return;
-
             patchState(store, (state) => ({
-              products: [...products],
+              products: [...productsMapped],
             }));
             patchState(store, (state) => ({
-              orders: [...orders],
+              orders: [...ordersMapped],
+            }));
+            patchState(store, (state) => ({
+              categories: [...categories],
             }));
           })
         );
-        // .subscribe();
       },
-      addProduct(product: Product) {
-        // patchState(store, { isLoading: true });
+      addProduct(product: Partial<Product>) {
+        const category = store
+          .categories()
+          .find((cat) => cat.id == product.categoryId);
+        const productMapped = { ...product, categoryName: category?.name };
         patchState(store, (state) => ({
-          products: [...state.products, product],
+          products: [...state.products, productMapped],
         }));
         // patchState(store, { isLoading: false });
       },
@@ -96,16 +133,21 @@ export const ProductsStore = signalStore(
                 : product.quantity;
               return {
                 ...product,
+                // productName: p.name,
                 quantity: quantity,
               };
             } else {
-              return product;
+              return {
+                ...product,
+                // productName: p.name,
+              };
             }
           }),
         }));
-
+        //@TODO remove after backend
+        const p = this.findProductById(+order.productId!);
         patchState(store, (state) => ({
-          orders: [...state.orders, order],
+          orders: [...state.orders, { ...order, productName: p.name }],
         }));
       },
       editOrder(
@@ -113,9 +155,11 @@ export const ProductsStore = signalStore(
         orderEditDiffQuantity: number,
         orderDeliveredOldValue: boolean
       ) {
+        //@TODO remove after backend
+        const p = this.findProductById(+order.productId!);
         patchState(store, (state) => ({
-          orders: state.orders.map((orderEl) => {
-            return orderEl.id === order.id ? order : orderEl;
+          orders: state.orders.map((orderEl: Order) => {
+            return orderEl.id === order.id ? { ...order, productName: p.name } : orderEl;
           }),
         }));
         patchState(store, (state) => ({
@@ -185,41 +229,10 @@ export const ProductsStore = signalStore(
     const clientStore = inject(ClientsStore);
 
     return {
-      // getProductsOrders: computed(() => {
-      //   // let productCopy = store.products();
-      //   // let productCopy = store.products().map(product => ({ ...product }));
-      //   const productCopy = structuredClone(store.products());
-
-      //   return productCopy.map((product: Product) => {
-      //     store.orders().forEach((order) => {
-      //       if (order.productId == product.id) {
-      //         product.amount -= +order.quantity;
-      //       }
-      //     });
-      //     return product;
-      //   });
-      // }),
       selectedProduct: computed<Product | undefined>(() => {
         return store
           .products()
           .find((product: Product) => product.id == store.selectedProductId());
-      }),
-      allOrders: computed(() => {
-        return store.orders().map((order) => {
-          const client = clientStore.clients().find((client: Client) => {
-            return order.clientId == client.id;
-          });
-          const product = store.products().find((product: Product) => {
-            return order.productId == product.id;
-          });
-          // console.log(order)
-
-          return {
-            ...order,
-            clientName: client?.name,
-            productName: product?.product,
-          };
-        });
       }),
       selectedProductOrders: computed(() => {
         return store
@@ -229,24 +242,11 @@ export const ProductsStore = signalStore(
           );
       }),
       ordersBySelectedClient: computed(() => {
-        const orders = store.orders().filter((order) => {
-          return order.clientId == clientStore.selectedClientId();
-        });
-
-        return orders.map((order) => {
-          const client = clientStore.clients().find((client: Client) => {
-            return order.clientId == client.id;
-          });
-          const product = store.products().find((product: Product) => {
-            return order.productId == product.id;
-          });
-
-          return {
-            ...order,
-            clientName: client?.name,
-            productName: product?.product,
-          };
-        });
+        return store
+          .orders()
+          .filter(
+            (order: Order) => order.clientId == clientStore.selectedClientId()
+          );
       }),
     };
   })

@@ -1,6 +1,6 @@
 <div class="row grid grid-flow-col justify-stretch gap-4">
   <app-card>
-    <h6 class="mb-2 text-xl font-bold">{{ selectedProduct()?.product }}</h6>
+    <h6 class="mb-2 text-xl font-bold">{{ selectedProduct()?.name }}</h6>
     <p>Kapacitet magacina za dati proizvod: {{ selectedProduct()?.stockCapacity }}</p>
     <p>Trenutna količina u magacinu: {{ (selectedProduct()?.quantity || 0) +  (selectedProduct()?.reserved || 0)}}</p>
     <p>Rezervisano (nije isporučeno): {{ selectedProduct()?.reserved }}</p>

@@ -40,6 +40,7 @@ import { ClientsStore } from '../../../store/clients/clients.store';
 import Client from '../../../interfaces/client.interface';
 import { ProductsStore } from '../../../store/products/products.store';
 import { ChartColumnComponent } from '../../../components/shared/charts/chart-column/chart-column.component';
+import { Order } from '../../../interfaces/order.interface';
 
 @Component({
   selector: 'app-client-detail',
@@ -61,7 +62,7 @@ import { ChartColumnComponent } from '../../../components/shared/charts/chart-co
     MatIconModule,
     DatePipe,
     ChartColumnComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
@@ -87,14 +88,12 @@ export class ClientDetailComponent implements OnInit {
     this.clientStore.getSelectedClient()
   );
 
-  public orders = computed(() => {
-    return this.productStore.ordersBySelectedClient();
-  });
+  public orders = computed(() => this.productStore.ordersBySelectedClient());
 
   public chartData = computed(() => {
     const myMap: any[] = [];
 
-    this.orders().forEach((order) => {
+    this.orders().forEach((order: any) => {
       const moonLanding = new Date(order.date);
       const month = moonLanding.getMonth();
 
@@ -118,9 +117,7 @@ export class ClientDetailComponent implements OnInit {
     return myMap;
   });
 
-  public allProducts = computed(() => {
-    return this.productStore.products();
-  });
+  public allProducts = computed(() => this.productStore.products());
 
   public dataSource = new MatTableDataSource<any>(this.orders());
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -141,6 +138,7 @@ export class ClientDetailComponent implements OnInit {
 
   constructor() {
     effect(() => {
+      console.log(this.orders())
       this.dataSource.data = this.orders();
     });
   }
@@ -215,9 +213,9 @@ export class ClientDetailComponent implements OnInit {
     this._snackBar.open('Uspešno uneta porudžbina!', 'ok', {
       duration: 5000,
       verticalPosition: 'top',
-      panelClass: ['success']
+      panelClass: ['success'],
     });
-    
+
     this.form.reset();
     this.productQuantity.set(0);
   }
@@ -264,10 +262,14 @@ export class ClientDetailComponent implements OnInit {
     let orderDiff = this.orderEditQuantity() - +this.editOrder().quantity;
 
     if (this.editOrder && this.editOrder().quantity <= this.productQuantity()) {
-      this.productStore.editOrder(copyOrder, orderDiff, this.orderDeliveredOldValue());
+      this.productStore.editOrder(
+        copyOrder,
+        orderDiff,
+        this.orderDeliveredOldValue()
+      );
       this.editOrder.set(null);
     } else {
-      alert("Nemate dovoljnu količinu u magacinu!");
+      alert('Nemate dovoljnu količinu u magacinu!');
     }
   }
 
