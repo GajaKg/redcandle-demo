@@ -5,6 +5,8 @@
     <p>Telefon: {{ selectedClient()?.contact }}</p>
     <p>Napomena: {{ selectedClient()?.note || "/" }}</p>
   </app-card>
+</div>
+<div class="row grid  gap-4">
   <app-card>
     <app-title-card>Naručeno po mesecima</app-title-card>
     <app-chart-column [data]="chartData()" />

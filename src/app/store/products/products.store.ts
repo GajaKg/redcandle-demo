@@ -96,7 +96,7 @@ export const ProductsStore = signalStore(
           .find((cat) => cat.id == product.categoryId);
         const productMapped = { ...product, categoryName: category?.name };
         patchState(store, (state) => ({
-          products: [...state.products, productMapped],
+          products: [productMapped, ...state.products],
         }));
         // patchState(store, { isLoading: false });
       },
@@ -150,7 +150,7 @@ export const ProductsStore = signalStore(
         //@TODO remove after backend
         const p = this.findProductById(+order.productId!);
         patchState(store, (state) => ({
-          orders: [...state.orders, { ...order, productName: p.name }],
+          orders: [ { ...order, productName: p.name }, ...state.orders],
         }));
       },
       editOrder(
