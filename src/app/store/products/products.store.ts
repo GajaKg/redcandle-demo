@@ -227,7 +227,6 @@ export const ProductsStore = signalStore(
         // }));
       },
       findOrdersByCategoryId(id: number): Order[] {
-        console.log(store.orders())
         return store.orders().filter((order: any) => +order.categoryId === +id);
       },
       findCategoryById(id: number): Category {

@@ -45,7 +45,6 @@ export class CategoryDetailOrdersComponent {
   }
 
   private readonly orderedByMonth = computed(() => {
-    console.log(this.ordersByCategory())
     const o: any = {};
     this.ordersByCategory().forEach((order: Order) => {
       const date = new Date(order.date);

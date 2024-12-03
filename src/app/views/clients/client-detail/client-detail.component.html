@@ -25,7 +25,7 @@
                 required
                 (selectionChange)="onSelectProduct($event.value)"
               >
-                @for (product of allProducts(); track product) {
+                @for (product of allProducts(); track product.id) {
                 <mat-option [value]="product.id">
                   {{ product.name }}
                 </mat-option>

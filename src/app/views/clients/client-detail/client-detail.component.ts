@@ -70,11 +70,10 @@ import { Order } from '../../../interfaces/order.interface';
 })
 export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly formBuilder = inject(FormBuilder);
   private _snackBar = inject(MatSnackBar);
   private readonly clientStore = inject(ClientsStore);
-  // private readonly orderStore = inject(OrdersStore);
   private readonly productStore = inject(ProductsStore);
-  private readonly formBuilder = inject(FormBuilder);
   protected form!: FormGroup;
 
   protected readonly today = new FormControl(new Date());
@@ -83,6 +82,7 @@ export class ClientDetailComponent implements OnInit {
   protected orderDeliveredOldValue = signal<boolean>(false);
   protected orderEditQuantity = signal<number>(0); // diff between old and new amount
   protected editOrder = signal<any>(undefined);
+  protected categoryId = signal<any>(undefined);
 
   protected selectedClient: Signal<Client | undefined> = computed(() =>
     this.clientStore.getSelectedClient()
@@ -172,8 +172,18 @@ export class ClientDetailComponent implements OnInit {
 
   onSelectProduct(productId: number) {
     const product = this.productStore.findProductById(productId);
+
     this.productQuantity.set(product ? product?.quantity : 0);
     this.form.get('quantity')?.patchValue(product ? product?.quantity : 0);
+
+    this.categoryId.set(product.categoryId)
+
+    // this.editOrder.update((values: any) => {
+    //   return {
+    //     ...values,
+    //     categoryId: product.categoryId
+    //   };
+    // });
   }
 
   onSubmit() {
@@ -196,7 +206,7 @@ export class ClientDetailComponent implements OnInit {
     const dateDelivery = this.form.controls['dateDelivery'].value;
     const delivered = this.form.controls['delivered'].value;
     const note = this.form.controls['note'].value;
-    const categoryId = productId + 1 || 1; // @TODO fix this 
+    const categoryId = this.categoryId()
 
     this.productStore.addOrder({
       id: this.orders().length + randomIntFromInterval(10, 100),
@@ -228,16 +238,17 @@ export class ClientDetailComponent implements OnInit {
   onEditOrder(order: any, i: number) {
     this.orderEditQuantity.set(order.quantity);
     this.orderDeliveredOldValue.set(order.delivered);
+    const product = this.productStore.findProductById(order.productId);
 
     this.editOrder.update((values: any) => {
       return {
         ...order,
+        categoryId: product.categoryId,
         date: new FormControl(new Date(order.date)),
         dateDelivery: new FormControl(new Date(order.dateDelivery)),
       };
     });
 
-    const product = this.productStore.findProductById(order.productId);
     this.productQuantity.set(
       product ? +product?.quantity + this.editOrder().quantity : 0
     );
@@ -249,7 +260,7 @@ export class ClientDetailComponent implements OnInit {
       clientId: this.editOrder().clientId,
       clientName: this.editOrder().clientName,
       productId: this.editOrder().productId,
-      categoryId: +this.editOrder().productId + 1, // @TODO fix category
+      categoryId: +this.editOrder().categoryId,
       quantity: +this.editOrder().quantity,
       paid: this.editOrder().paid,
       date: this.editOrder().date.value,
