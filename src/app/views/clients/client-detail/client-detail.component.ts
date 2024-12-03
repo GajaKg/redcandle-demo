@@ -138,7 +138,6 @@ export class ClientDetailComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      console.log(this.orders())
       this.dataSource.data = this.orders();
     });
   }
@@ -197,11 +196,13 @@ export class ClientDetailComponent implements OnInit {
     const dateDelivery = this.form.controls['dateDelivery'].value;
     const delivered = this.form.controls['delivered'].value;
     const note = this.form.controls['note'].value;
+    const categoryId = productId + 1 || 1; // @TODO fix this 
 
     this.productStore.addOrder({
       id: this.orders().length + randomIntFromInterval(10, 100),
       clientId: +this.selectedId(),
       productId,
+      categoryId,
       quantity,
       date,
       paid,
@@ -248,6 +249,7 @@ export class ClientDetailComponent implements OnInit {
       clientId: this.editOrder().clientId,
       clientName: this.editOrder().clientName,
       productId: this.editOrder().productId,
+      categoryId: +this.editOrder().productId + 1, // @TODO fix category
       quantity: +this.editOrder().quantity,
       paid: this.editOrder().paid,
       date: this.editOrder().date.value,

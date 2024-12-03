@@ -7,6 +7,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatListModule } from '@angular/material/list';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
@@ -26,6 +27,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MatListModule,
     TitleCardComponent,
     MatButtonModule,
     MatPaginatorModule,
@@ -40,7 +42,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ProductListComponent {
   // private readonly formBuilder = inject(FormBuilder);
   private readonly storeProducts = inject(ProductsStore);
-  private router = inject(Router);
+  private readonly router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   protected displayedColumns: string[] = [
     'id',
@@ -52,7 +54,9 @@ export class ProductListComponent {
   ];
 
   protected readonly products = computed(() => this.storeProducts.products());
-  protected readonly categories = computed(() => this.storeProducts.categories());
+  protected readonly categories = computed(() =>
+    this.storeProducts.categories()
+  );
   public dataSource = new MatTableDataSource<Product>(this.products());
 
   public editElement?: null | Product = null;
@@ -111,5 +115,12 @@ export class ProductListComponent {
     this.router.navigate([Route.Product, productId], {
       relativeTo: this.activatedRoute,
     });
+  }
+  
+  navigateToCategory(categoryId: number) {
+    this.router.navigate([
+      `${Route.Categories}/${Route.CategoryDetail}`,
+      categoryId,
+    ]);
   }
 }

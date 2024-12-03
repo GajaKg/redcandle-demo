@@ -121,6 +121,9 @@ export const ProductsStore = signalStore(
       findProductById(id: number) {
         return store.products().find((product: Product) => +product.id === +id);
       },
+      findProductsByCategoryId(id: number): Product[] {
+        return store.products().filter((product: Product) => +product.categoryId === +id);
+      },
       setSelectedProductId(id: number) {
         patchState(store, { selectedProductId: id });
       },
@@ -222,6 +225,13 @@ export const ProductsStore = signalStore(
         //     return orderEl.id !== id;
         //   }),
         // }));
+      },
+      findOrdersByCategoryId(id: number): Order[] {
+        console.log(store.orders())
+        return store.orders().filter((order: any) => +order.categoryId === +id);
+      },
+      findCategoryById(id: number): Category {
+        return store.categories().find((category: any) => +category.id === +id);
       },
     })
   ),

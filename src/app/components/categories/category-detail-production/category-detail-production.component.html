@@ -1,0 +1,11 @@
+<app-title-card>Proizvedeno na mesečnom nivou</app-title-card>
+<app-chips
+  [items]="productionYears()"
+  (onClick)="changeProductionYearsHandler($event)"
+/>
+<app-chart-column [data]="productionByMonthChartData()" />
+<app-title-card>Proizvedeno na godišnjem nivou</app-title-card>
+<app-chart-column
+  [data]="productionByYearChartData()"
+  [opt]="productionByYearChartOpt()"
+/>

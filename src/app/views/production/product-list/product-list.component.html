@@ -2,10 +2,31 @@
   <app-card>
     <h6 class="mb-2 text-xl font-bold">Magacin</h6>
   </app-card>
+</div>
+<div class="row grid grid-flow-col justify-stretch gap-4">
   <app-card>
     <app-title-card>Dodaj proizvod</app-title-card>
     <app-product-form (submitEmit)="onSubmit($event)" />
   </app-card>
+  <app-card>
+    <app-title-card>Lista kategorija</app-title-card>
+    <mat-list>
+      @for (cat of categories(); track $index;) {
+      <mat-list-item
+        >{{ $index + 1 }}. {{ cat.name }}
+        <button
+          (click)="navigateToCategory(cat.id); $event.stopPropagation()"
+          class="ml-2"
+          style="vertical-align: top"
+        >
+          <mat-icon class="text-green-700">read_more</mat-icon>
+        </button>
+      </mat-list-item>
+      }
+    </mat-list>
+  </app-card>
+</div>
+<div class="row grid gap-4">
   <app-card>
     <app-title-card>Lista proizvoda</app-title-card>
     <div class="">

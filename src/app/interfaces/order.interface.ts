@@ -4,6 +4,7 @@ export interface Order {
   clientId: number;
   clientName: string;
   productId: number;
+  categoryId: number;
   quantity: number,
   paid: boolean,
   date: Date | string,

@@ -1,0 +1,11 @@
+::ng-deep {
+  .mat-mdc-standard-chip.mdc-evolution-chip--selected:not(
+      .mdc-evolution-chip--disabled
+    ) {
+    background-color: #c60d0d !important;
+  }
+
+  .mdc-evolution-chip__checkmark-svg {
+    color: white !important;
+  }
+}

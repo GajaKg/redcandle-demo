@@ -1,0 +1,28 @@
+<div class="row grid gap-4">
+  <app-card>
+    @if(category() && category().name) {
+    <h6 class="mb-2 text-xl font-bold">{{ category().name }}</h6>
+    }
+    <p>Lista proizvoda koja pripadaju kategoriji:</p>
+    <mat-list>
+      @for (product of productsByCategory(); track $index;) {
+      <mat-list-item>
+        <a
+          [routerLink]="['/production/product', product.id]"
+          class="inline-flex"
+          style="vertical-align: top"
+        >
+          {{ $index + 1 }}. {{ product.name }}
+          <mat-icon class="ml-2 text-green-700">read_more</mat-icon>
+        </a>
+      </mat-list-item>
+      }
+    </mat-list>
+  </app-card>
+  <app-card>
+    <app-category-detail-orders [categoryId]="categoryId()" />
+  </app-card>
+  <app-card>
+    <app-category-detail-production [categoryId]="categoryId()" />
+  </app-card>
+</div>

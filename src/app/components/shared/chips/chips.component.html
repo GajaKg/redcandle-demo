@@ -1,0 +1,10 @@
+<mat-chip-listbox [ariaLabel]="label()">
+  @for (item of items(); track $index) {
+  <mat-chip-option
+    (click)="clickHandler(item)"
+    [selected]="defaultValue() == item"
+  >
+    {{ item }}
+  </mat-chip-option>
+  }
+</mat-chip-listbox>
