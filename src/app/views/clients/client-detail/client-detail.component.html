@@ -6,13 +6,14 @@
     <p>Napomena: {{ selectedClient()?.note || "/" }}</p>
   </app-card>
 </div>
-<div class="row grid  gap-4">
+<div class="row grid gap-4">
   <app-card>
     <app-title-card>Naručeno po mesecima</app-title-card>
-    <app-chart-column [data]="chartData()" />
+    <app-chips [items]="orderYears()" (onClick)="orderYearChartHandler($event)" />
+    <app-chart-column [data]="ordersByMonthCartData()" />
   </app-card>
 </div>
-<div class="row grid  gap-4">
+<div class="row grid gap-4">
   <app-card>
     <app-title-card>Dodaj porudžbenicu</app-title-card>
     <div>
@@ -174,7 +175,7 @@
             <mat-form-field style="max-width: 170px">
               <mat-label>Datum upisa</mat-label>
               <input
-                (ngModel)="(editOrder().date)"
+                (ngModel)="editOrder().date"
                 [formControl]="editOrder().date"
                 matInput
                 [matDatepicker]="date"
@@ -201,7 +202,7 @@
             <mat-form-field style="max-width: 170px">
               <mat-label>Datum dostave</mat-label>
               <input
-                (ngModel)="(editOrder().dateDelivery)"
+                (ngModel)="editOrder().dateDelivery"
                 [formControl]="editOrder().dateDelivery"
                 matInput
                 [matDatepicker]="dateDelivery"
@@ -256,20 +257,24 @@
           <th mat-header-cell *matHeaderCellDef>Napomena</th>
           <td mat-cell *matCellDef="let element">
             @if(element.id == editOrder()?.id) {
-              <mat-form-field (click)="$event.stopPropagation()">
-                <mat-label>Napomena</mat-label>
-                <input matInput [(ngModel)]="editOrder()!.note" />
-              </mat-form-field>
-              } @else {
-              {{ element.note }}
-              }
+            <mat-form-field (click)="$event.stopPropagation()">
+              <mat-label>Napomena</mat-label>
+              <input matInput [(ngModel)]="editOrder()!.note" />
+            </mat-form-field>
+            } @else {
+            {{ element.note }}
+            }
           </td>
         </ng-container>
 
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element; let i = index" class="w-36 !text-right">
+          <td
+            mat-cell
+            *matCellDef="let element; let i = index"
+            class="w-36 !text-right"
+          >
             <div class="inline mr-8">
               @if(element.id == editOrder()?.id) {
               <button (click)="onCancel()" class="mr-2">

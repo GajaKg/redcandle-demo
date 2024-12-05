@@ -20,6 +20,8 @@ import {
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 
+import { extractChartDataOrdersForMultipleProducts } from '../../../helpers/helpers';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -36,11 +38,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CardComponent } from '../../../components/shared/card/card.component';
 import { TitleCardComponent } from '../../../components/shared/title-card/title-card.component';
 
-import { ClientsStore } from '../../../store/clients/clients.store';
 import Client from '../../../interfaces/client.interface';
+import { ClientsStore } from '../../../store/clients/clients.store';
 import { ProductsStore } from '../../../store/products/products.store';
 import { ChartColumnComponent } from '../../../components/shared/charts/chart-column/chart-column.component';
 import { Order } from '../../../interfaces/order.interface';
+import { ChipsComponent } from '../../../components/shared/chips/chips.component';
+import { Product } from '../../../interfaces/product.interface';
 
 @Component({
   selector: 'app-client-detail',
@@ -63,6 +67,7 @@ import { Order } from '../../../interfaces/order.interface';
     DatePipe,
     ChartColumnComponent,
     MatSnackBarModule,
+    ChipsComponent,
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
@@ -84,37 +89,64 @@ export class ClientDetailComponent implements OnInit {
   protected editOrder = signal<any>(undefined);
   protected categoryId = signal<any>(undefined);
 
+  protected selectedOrdersYear: any = signal(new Date().getFullYear());
+  protected currentYear: any = signal(new Date().getFullYear());
+
   protected selectedClient: Signal<Client | undefined> = computed(() =>
     this.clientStore.getSelectedClient()
   );
 
   public orders = computed(() => this.productStore.ordersBySelectedClient());
 
-  public chartData = computed(() => {
-    const myMap: any[] = [];
+  public ordersByYear = computed(() =>
+    extractChartDataOrdersForMultipleProducts(this.orders())
+  );
 
-    this.orders().forEach((order: any) => {
-      const moonLanding = new Date(order.date);
-      const month = moonLanding.getMonth();
+  public ordersByMonthCartData = computed(() => {
+    console.log(this.ordersByYear());
+    const chartData: any = [];
+    const productsNames = Object.keys(this.ordersByYear());
 
-      const columnProduct = myMap.find(
-        (column) => column.name === order.productName
-      );
-
-      if (columnProduct) {
-        columnProduct.data[month] =
-          (columnProduct.data[month] || 0) + order.quantity;
-      } else {
-        let data = new Array(12).fill(0);
-        data[month] = order.quantity;
-
-        myMap.push({
-          name: order.productName,
-          data: data,
-        });
-      }
+    productsNames.forEach((productName: string) => {
+      chartData.push({
+        name: productName,
+        data: this.ordersByYear()[productName][this.selectedOrdersYear()] || [],
+      });
     });
-    return myMap;
+
+    return chartData;
+  });
+
+  public ordersByYearCartData = computed(() => {
+    console.log(this.ordersByYear());
+    const chartData: any = [];
+    const productsNames = Object.keys(this.ordersByYear());
+
+    productsNames.forEach((productName: string) => {
+      chartData.push({
+        name: productName,
+        data: this.ordersByYear()[productName][this.selectedOrdersYear()],
+      });
+    });
+
+    return chartData;
+  });
+
+  public orderYears = computed(() => {
+    const c: any[] = [];
+    const years = new Set<number>();
+    const o = Object.values(this.ordersByYear());
+
+    o.forEach((val: any) => {
+      c.push(...Object.keys(val));
+    });
+
+
+    c.forEach(val => {
+      years.add(+val)
+    })
+
+    return Array.from(years).sort().reverse();
   });
 
   public allProducts = computed(() => this.productStore.products());
@@ -176,7 +208,7 @@ export class ClientDetailComponent implements OnInit {
     this.productQuantity.set(product ? product?.quantity : 0);
     this.form.get('quantity')?.patchValue(product ? product?.quantity : 0);
 
-    this.categoryId.set(product.categoryId)
+    this.categoryId.set(product.categoryId);
 
     // this.editOrder.update((values: any) => {
     //   return {
@@ -206,7 +238,7 @@ export class ClientDetailComponent implements OnInit {
     const dateDelivery = this.form.controls['dateDelivery'].value;
     const delivered = this.form.controls['delivered'].value;
     const note = this.form.controls['note'].value;
-    const categoryId = this.categoryId()
+    const categoryId = this.categoryId();
 
     this.productStore.addOrder({
       id: this.orders().length + randomIntFromInterval(10, 100),
@@ -288,6 +320,10 @@ export class ClientDetailComponent implements OnInit {
 
   onCancel() {
     this.editOrder.set(null);
+  }
+
+  orderYearChartHandler(val: any) {
+    this.selectedOrdersYear.set(val);
   }
 }
 

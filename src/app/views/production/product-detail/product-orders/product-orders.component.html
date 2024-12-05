@@ -1,12 +1,12 @@
 <app-title-card>Isporučeno</app-title-card>
 <mat-tab-group (selectedIndexChange)="setActiveTab($event)">
-  <mat-tab label="Isporučeno na godišnjem nivou">
+  <mat-tab label="Poručeno na godišnjem nivou">
     <app-chart-line
       [data]="orderYearsValues()"
       [opt]="productOrdersOptionsLineChart()"
     />
   </mat-tab>
-  <mat-tab label="Isporučeno na mesečnom nivou">
+  <mat-tab label="Poručeno na mesečnom nivou">
     @if(activeTab() == 1) {
     <mat-chip-listbox aria-label="Grafik proizvodnje za godinu">
       @for (item of orderYearsKeys(); track $index) {
