@@ -8,19 +8,7 @@
   </mat-tab>
   <mat-tab label="Poručeno na mesečnom nivou">
     @if(activeTab() == 1) {
-    <mat-chip-listbox aria-label="Grafik proizvodnje za godinu">
-      @for (item of orderYearsKeys(); track $index) {
-      <mat-chip-option 
-        (click)="changeOrdersYear(+item)"
-        [selected]="selectedYear() === +item">
-        {{ item }}
-      </mat-chip-option>
-      }
-    </mat-chip-listbox>
-    <app-chart-line
-      [data]="orderByMonthValues()"
-      [opt]="productOrdersMonthlyOptionsLineChart()"
-    />
+    <app-orders-chart-monthly [orders]="productOrders()" />
     }
   </mat-tab>
 </mat-tab-group>

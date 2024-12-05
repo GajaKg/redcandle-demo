@@ -8,9 +8,7 @@
 </div>
 <div class="row grid gap-4">
   <app-card>
-    <app-title-card>Naručeno po mesecima</app-title-card>
-    <app-chips [items]="orderYears()" (onClick)="orderYearChartHandler($event)" />
-    <app-chart-column [data]="ordersByMonthCartData()" />
+    <app-orders-chart-monthly [orders]="orders()" [multipleProducts]="true" />
   </app-card>
 </div>
 <div class="row grid gap-4">

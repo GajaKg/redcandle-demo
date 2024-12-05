@@ -1,9 +1,6 @@
 <app-title-card>Poručeno na mesečnom nivou</app-title-card>
-<app-chips
-  [items]="orderYears()"
-  (onClick)="productionYearChart($event)"
-/>
-<app-chart-column [data]="orderByMonthChartData()" />
+<app-orders-chart-monthly [orders]="ordersByCategory()" />
+
 <app-title-card>Poručeno na godišnjem nivou</app-title-card>
 <app-chart-column
   [data]="orderByYearChartData()"

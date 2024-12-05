@@ -14,6 +14,7 @@ import { TitleCardComponent } from '../../../../components/shared/title-card/tit
 import { ProductsStore } from '../../../../store/products/products.store';
 import { Order } from '../../../../interfaces/order.interface';
 import { ChartLineComponent } from '../../../../components/shared/charts/chart-line/chart-line.component';
+import { OrdersChartMonthlyComponent } from "../../../../components/orders/orders-chart-monthly/orders-chart-monthly.component";
 
 @Component({
   selector: 'app-product-orders',
@@ -23,7 +24,8 @@ import { ChartLineComponent } from '../../../../components/shared/charts/chart-l
     ChartLineComponent,
     MatChipsModule,
     MatTabsModule,
-  ],
+    OrdersChartMonthlyComponent
+],
   templateUrl: './product-orders.component.html',
   styleUrl: './product-orders.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +36,6 @@ export class ProductOrdersComponent {
   protected productId!: number;
 
   protected activeTab = signal(0);
-  protected selectedYear = signal(new Date().getFullYear());
 
   protected productOrders = computed(() =>
     this._productStore.selectedProductOrders()
@@ -56,10 +57,6 @@ export class ProductOrdersComponent {
     return o;
   });
 
-  protected orderYearsKeys = computed(() => {
-    return Object.keys(this.sumOrdersByYear()).reverse();
-  });
-
   protected orderYearsValues = computed(() => {
     return Object.values(this.sumOrdersByYear());
   });
@@ -72,61 +69,8 @@ export class ProductOrdersComponent {
     };
   });
 
-
-  //********* CHART BY MONTH ************//
-  protected sumOrdersByMonth = computed(() => {
-    const o: any = {};
-    this.productOrders().forEach((order: Order) => {
-      const date = new Date(order.date);
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      // const month = date.toLocaleString('default', { month: 'short' });
-
-      if (o.hasOwnProperty(year)) {
-        if (o[year].hasOwnProperty(month)) {
-          o[year][month] += order.quantity;
-        } else {
-          o[year][month] = order.quantity;
-        }
-      } else {
-        o[year] = new Array(12).fill(0);
-        o[year][month] = order.quantity;
-      }
-    });
-
-    return o;
-  });
-
-  protected orderByMonthValues = computed(() => {
-    return this.sumOrdersByMonth()[this.selectedYear()];
-  });
-
-  protected productOrdersMonthlyOptionsLineChart = computed(() => {
-    return {
-      xaxis: {
-        categories: [
-          'Jan',
-          'Feb',
-          'Mart',
-          'April',
-          'Maj',
-          'Jun',
-          'Jul',
-          'Avg',
-          'Sep',
-          'Okt',
-          'Nov',
-          'Dec',
-        ],
-      },
-    };
-  });
-
   protected setActiveTab(index: number) {
     this.activeTab.set(index);
   }
-  protected changeOrdersYear(year: number) {
-    this.selectedYear.set(year);
-  }
-  //********* end CHART BY MONTH end *************//
+
 }

@@ -41,10 +41,7 @@ import { TitleCardComponent } from '../../../components/shared/title-card/title-
 import Client from '../../../interfaces/client.interface';
 import { ClientsStore } from '../../../store/clients/clients.store';
 import { ProductsStore } from '../../../store/products/products.store';
-import { ChartColumnComponent } from '../../../components/shared/charts/chart-column/chart-column.component';
-import { Order } from '../../../interfaces/order.interface';
-import { ChipsComponent } from '../../../components/shared/chips/chips.component';
-import { Product } from '../../../interfaces/product.interface';
+import { OrdersChartMonthlyComponent } from "../../../components/orders/orders-chart-monthly/orders-chart-monthly.component";
 
 @Component({
   selector: 'app-client-detail',
@@ -65,10 +62,9 @@ import { Product } from '../../../interfaces/product.interface';
     MatTableModule,
     MatIconModule,
     DatePipe,
-    ChartColumnComponent,
     MatSnackBarModule,
-    ChipsComponent,
-  ],
+    OrdersChartMonthlyComponent
+],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,65 +85,11 @@ export class ClientDetailComponent implements OnInit {
   protected editOrder = signal<any>(undefined);
   protected categoryId = signal<any>(undefined);
 
-  protected selectedOrdersYear: any = signal(new Date().getFullYear());
-  protected currentYear: any = signal(new Date().getFullYear());
-
   protected selectedClient: Signal<Client | undefined> = computed(() =>
     this.clientStore.getSelectedClient()
   );
 
   public orders = computed(() => this.productStore.ordersBySelectedClient());
-
-  public ordersByYear = computed(() =>
-    extractChartDataOrdersForMultipleProducts(this.orders())
-  );
-
-  public ordersByMonthCartData = computed(() => {
-    console.log(this.ordersByYear());
-    const chartData: any = [];
-    const productsNames = Object.keys(this.ordersByYear());
-
-    productsNames.forEach((productName: string) => {
-      chartData.push({
-        name: productName,
-        data: this.ordersByYear()[productName][this.selectedOrdersYear()] || [],
-      });
-    });
-
-    return chartData;
-  });
-
-  public ordersByYearCartData = computed(() => {
-    console.log(this.ordersByYear());
-    const chartData: any = [];
-    const productsNames = Object.keys(this.ordersByYear());
-
-    productsNames.forEach((productName: string) => {
-      chartData.push({
-        name: productName,
-        data: this.ordersByYear()[productName][this.selectedOrdersYear()],
-      });
-    });
-
-    return chartData;
-  });
-
-  public orderYears = computed(() => {
-    const c: any[] = [];
-    const years = new Set<number>();
-    const o = Object.values(this.ordersByYear());
-
-    o.forEach((val: any) => {
-      c.push(...Object.keys(val));
-    });
-
-
-    c.forEach(val => {
-      years.add(+val)
-    })
-
-    return Array.from(years).sort().reverse();
-  });
 
   public allProducts = computed(() => this.productStore.products());
 
@@ -320,10 +262,6 @@ export class ClientDetailComponent implements OnInit {
 
   onCancel() {
     this.editOrder.set(null);
-  }
-
-  orderYearChartHandler(val: any) {
-    this.selectedOrdersYear.set(val);
   }
 }
 
