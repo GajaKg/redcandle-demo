@@ -21,7 +21,7 @@ export function extractChartDataOrdersForMultipleProducts(orders: Order[]) {
         myMap[productName][year][month] = order.quantity;
       }
     } else {
-      myMap[productName] = {};;
+      myMap[productName] = {};
       myMap[productName][year] = new Array(12).fill(0);
       myMap[productName][year][month] = order.quantity;
     }
@@ -31,24 +31,49 @@ export function extractChartDataOrdersForMultipleProducts(orders: Order[]) {
 }
 
 export function extractChartDataOrdersForSingleProduct(orders: Order[]) {
-    const myMap: any = {};
+  const myMap: any = {};
 
-    orders.forEach((order: any) => {
-      const date = new Date(order.date);
-      const year = date.getFullYear();
-      const month = date.getMonth();
+  orders.forEach((order: any) => {
+    const date = new Date(order.date);
+    const year = date.getFullYear();
+    const month = date.getMonth();
 
-      if (myMap.hasOwnProperty(year)) {
-        if (myMap[year].hasOwnProperty(month)) {
-          myMap[year][month] += order.quantity;
-        } else {
-          myMap[year][month] = order.quantity;
-        }
+    if (myMap.hasOwnProperty(year)) {
+      if (myMap[year].hasOwnProperty(month)) {
+        myMap[year][month] += order.quantity;
       } else {
-        myMap[year] = new Array(12).fill(0);
         myMap[year][month] = order.quantity;
       }
+    } else {
+      myMap[year] = new Array(12).fill(0);
+      myMap[year][month] = order.quantity;
+    }
+  });
+  return myMap;
+}
 
-    });
-    return myMap;
+export function extractChartDataOrdersYearlyForMultipleProducts(
+  orders: Order[]
+) {
+  const myMap: any = {};
+
+  orders.forEach((order: any) => {
+    const date = new Date(order.date);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const productName = order.productName;
+
+    if (myMap.hasOwnProperty(productName)) {
+      if (myMap.hasOwnProperty(year)) {
+        myMap[productName][year] += order.quantity;
+      } else {
+        myMap[productName][year] = order.quantity;
+      }
+    } else {
+      myMap[productName] = {};
+      myMap[productName][year] = order.quantity;
+    }
+  });
+
+  return myMap;
 }

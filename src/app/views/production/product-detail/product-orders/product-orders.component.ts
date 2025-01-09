@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -13,18 +12,18 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TitleCardComponent } from '../../../../components/shared/title-card/title-card.component';
 import { ProductsStore } from '../../../../store/products/products.store';
 import { Order } from '../../../../interfaces/order.interface';
-import { ChartLineComponent } from '../../../../components/shared/charts/chart-line/chart-line.component';
 import { OrdersChartMonthlyComponent } from "../../../../components/orders/orders-chart-monthly/orders-chart-monthly.component";
+import { OrdersChartYearlyComponent } from "../../../../components/orders/orders-chart-yearly/orders-chart-yearly.component";
 
 @Component({
   selector: 'app-product-orders',
   standalone: true,
   imports: [
     TitleCardComponent,
-    ChartLineComponent,
     MatChipsModule,
     MatTabsModule,
-    OrdersChartMonthlyComponent
+    OrdersChartMonthlyComponent,
+    OrdersChartYearlyComponent
 ],
   templateUrl: './product-orders.component.html',
   styleUrl: './product-orders.component.scss',

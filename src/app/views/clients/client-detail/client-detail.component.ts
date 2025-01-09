@@ -42,6 +42,7 @@ import Client from '../../../interfaces/client.interface';
 import { ClientsStore } from '../../../store/clients/clients.store';
 import { ProductsStore } from '../../../store/products/products.store';
 import { OrdersChartMonthlyComponent } from "../../../components/orders/orders-chart-monthly/orders-chart-monthly.component";
+import { OrdersChartYearlyComponent } from "../../../components/orders/orders-chart-yearly/orders-chart-yearly.component";
 
 @Component({
   selector: 'app-client-detail',
@@ -63,7 +64,8 @@ import { OrdersChartMonthlyComponent } from "../../../components/orders/orders-c
     MatIconModule,
     DatePipe,
     MatSnackBarModule,
-    OrdersChartMonthlyComponent
+    OrdersChartMonthlyComponent,
+    OrdersChartYearlyComponent
 ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
