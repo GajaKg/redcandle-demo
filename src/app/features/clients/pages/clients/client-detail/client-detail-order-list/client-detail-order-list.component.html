@@ -1,0 +1,193 @@
+<table mat-table [dataSource]="dataSource">
+  <!-- # Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let element; let i = index" class="w-12">
+      {{ i + 1 }}.
+    </td>
+  </ng-container>
+
+  <!-- Product Column -->
+  <!-- <ng-container matColumnDef="clientName">
+          <th mat-header-cell *matHeaderCellDef>Klijent</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.clientName }}
+          </td>
+        </ng-container> -->
+
+  <!-- productName Column -->
+  <ng-container matColumnDef="productName">
+    <th mat-header-cell *matHeaderCellDef>Proizvod</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.productName }}
+    </td>
+  </ng-container>
+  <!-- Amount Column -->
+  <!-- <ng-container matColumnDef="productId">
+          <th mat-header-cell *matHeaderCellDef>Proizvod</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.productId }}
+          </td>
+        </ng-container> -->
+
+  <!-- quantity Column -->
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef>Količina</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field style="max-width: 130px">
+          <mat-label>Količina {{ productQuantity() }}</mat-label>
+          <input
+            [(ngModel)]="editOrder!().quantity"
+            matInput
+            [max]="+productQuantity()"
+            type="number"
+          />
+          <mat-error class="text-red-800 text-xs">
+            Na stanju:
+            <strong class="text-red-800 text-xs">{{
+              productQuantity()
+            }}</strong>
+          </mat-error>
+        </mat-form-field>
+      } @else {
+        {{ element.quantity }}
+      }
+    </td>
+  </ng-container>
+
+  <!-- Amount Column -->
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Datum upisa</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field style="max-width: 170px">
+          <mat-label>Datum upisa</mat-label>
+          <input
+            (ngModel)="editOrder().date"
+            [formControl]="editOrder().date"
+            matInput
+            [matDatepicker]="date"
+            [max]="editOrder().dateDelivery.value"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="date"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #date></mat-datepicker>
+        </mat-form-field>
+      } @else {
+        {{ element.date | date: "dd.MM.yyyy" }}
+      }
+    </td>
+  </ng-container>
+
+  <!-- dateDelivery Column -->
+  <ng-container matColumnDef="dateDelivery">
+    <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field style="max-width: 170px">
+          <mat-label>Datum dostave</mat-label>
+          <input
+            (ngModel)="editOrder().dateDelivery"
+            [formControl]="editOrder().dateDelivery"
+            matInput
+            [matDatepicker]="dateDelivery"
+            [min]="editOrder().date.value"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="dateDelivery"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #dateDelivery></mat-datepicker>
+        </mat-form-field>
+      } @else {
+        {{ element.dateDelivery | date: "dd.MM.yyyy" }}
+      }
+    </td>
+  </ng-container>
+
+  <!-- paid Column -->
+  <ng-container matColumnDef="paid">
+    <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-slide-toggle [(ngModel)]="editOrder()!.paid" />
+      } @else {
+        <mat-icon [class]="element.paid ? 'text-green-700' : 'text-red-700'">
+          {{ element.paid ? "check_circle" : "cancel_circle" }}
+        </mat-icon>
+      }
+    </td>
+  </ng-container>
+
+  <!-- delivered Column -->
+  <ng-container matColumnDef="delivered">
+    <th mat-header-cell *matHeaderCellDef>Isporučeno</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-slide-toggle [(ngModel)]="editOrder()!.delivered" />
+      } @else {
+        <mat-icon
+          [class]="element.delivered ? 'text-green-700' : 'text-red-700'"
+        >
+          {{ element.delivered ? "check_circle" : "cancel_circle" }}
+        </mat-icon>
+      }
+    </td>
+  </ng-container>
+
+  <!-- Amount Column -->
+  <ng-container matColumnDef="note">
+    <th mat-header-cell *matHeaderCellDef>Napomena</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field (click)="$event.stopPropagation()">
+          <mat-label>Napomena</mat-label>
+          <input matInput [(ngModel)]="editOrder()!.note" />
+        </mat-form-field>
+      } @else {
+        {{ element.note }}
+      }
+    </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td
+      mat-cell
+      *matCellDef="let element; let i = index"
+      class="w-36 !text-right"
+    >
+      <div class="inline mr-8">
+        @if (element.id == editOrder()?.id) {
+          <button (click)="onCancel()" class="mr-2">
+            <mat-icon class="text-red-700">cancel</mat-icon>
+          </button>
+          <button (click)="onEditOrderConfirmed()">
+            <mat-icon class="text-green-700">check_circle</mat-icon>
+          </button>
+        } @else {
+          <button (click)="onEditOrder(element, i)">
+            <mat-icon class="text-green-700">edit</mat-icon>
+          </button>
+        }
+      </div>
+      <button (click)="onDeleteOrder(element.id)">
+        <mat-icon class="text-red-700">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+  aria-label="Select page of periodic elements"
+>
+</mat-paginator>

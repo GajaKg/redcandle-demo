@@ -1,0 +1,34 @@
+<div class="row grid gap-4 grid-flow-col justify-stretch">
+  <app-card>
+    <h6 class="!mb-6 text-xl font-bold">{{ selectedClient()?.name }}</h6>
+    <p>Adresa: {{ selectedClient()?.address }}</p>
+    <p>Telefon: {{ selectedClient()?.contact }}</p>
+    <p>Napomena: {{ selectedClient()?.note || "/" }}</p>
+  </app-card>
+</div>
+<div class="row grid gap-4">
+  <app-card>
+    <app-title-card>Poručeno na mesečnom nivou</app-title-card>
+    <app-orders-chart-monthly [orders]="orders()" [multipleProducts]="true" />
+  </app-card>
+  <app-card>
+    <app-title-card>Poručeno na godinšnjem nivou</app-title-card>
+    <app-orders-chart-yearly [orders]="orders()" [multipleProducts]="true" />
+  </app-card>
+</div>
+<div class="row grid gap-4">
+  <app-card>
+    <app-title-card>Dodaj porudžbenicu</app-title-card>
+    <div>
+      <app-client-detail-order-form />
+    </div>
+  </app-card>
+</div>
+<div class="row grid gap-4">
+  <app-card>
+    <app-title-card>Lista porudžbenica</app-title-card>
+    <div>
+      <app-client-detail-order-list />
+    </div>
+  </app-card>
+</div>

@@ -1,0 +1,80 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col">
+    <div class="flex gap-4">
+      <mat-form-field class="w-1/2">
+        <mat-label>Proizvod</mat-label>
+        <mat-select
+          formControlName="product"
+          matNativeControl
+          required
+          (selectionChange)="onSelectProduct($event.value)"
+        >
+          @for (product of allProducts(); track product.id) {
+            <mat-option [value]="product.id">
+              {{ product.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-1/2">
+        <span class="text-red-800 text-xs"> </span>
+        <mat-label>Količina {{ productQuantity() }}</mat-label>
+        <input
+          formControlName="quantity"
+          matInput
+          [max]="+productQuantity()"
+          type="number"
+        />
+        <mat-error class="text-red-800 text-xs">
+          Na stanju:
+          <strong class="text-red-800 text-xs">{{ productQuantity() }}</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="flex gap-4">
+      <mat-form-field class="w-1/2">
+        <mat-label>Datum unosa</mat-label>
+        <input
+          formControlName="date"
+          matInput
+          [matDatepicker]="date"
+          [max]="form.get('dateDelivery')?.value"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="date"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #date></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="w-1/2">
+        <mat-label>Datum dostave</mat-label>
+        <input
+          formControlName="dateDelivery"
+          matInput
+          [matDatepicker]="dateDelivery"
+          [min]="form.get('date')?.value"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="dateDelivery"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #dateDelivery></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="flex gap-4">
+      <mat-form-field class="w-1/2">
+        <mat-label>Napomena</mat-label>
+        <input formControlName="note" matInput value="" />
+      </mat-form-field>
+      <div class="flex gap-10 w-1/2">
+        <mat-slide-toggle formControlName="paid">Plaćeno</mat-slide-toggle>
+        <mat-slide-toggle formControlName="delivered"
+          >Isporučeno</mat-slide-toggle
+        >
+      </div>
+    </div>
+  </div>
+
+  <button mat-flat-button type="submit">Potvrdi</button>
+</form>

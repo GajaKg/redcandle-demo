@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { ProductsStore } from './store/products/products.store';
-import { ClientsStore } from './store/clients/clients.store';
+import { SidebarComponent } from '@/core/components/sidebar/sidebar.component';
+import { ProductsStore } from '@/features/warehouse/store/products.store';
+import { ClientsStore } from '@/features/clients/store/clients.store';
 
 @Component({
   selector: 'app-root',

@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-import { ClientsComponent } from './views/clients/clients.component';
-import { ProductionComponent } from './views/production/production.component';
-import { ProductListComponent } from './views/production/product-list/product-list.component';
-import { ProductDetailComponent } from './views/production/product-detail/product-detail.component';
-import { ClientDetailComponent } from './views/clients/client-detail/client-detail.component';
-import { CategoriesComponent } from './views/categories/categories.component';
-import { CategoryDetailComponent } from './views/categories/category-detail/category-detail.component';
+import { ProductionComponent } from './features/warehouse/pages/production/production.component';
+import { ProductListComponent } from './features/warehouse/pages/production/product-list/product-list.component';
+import { ProductDetailComponent } from './features/warehouse/pages/production/product-detail/product-detail.component';
+import { CategoryDetailComponent } from './features/categories/pages/category-detail/category-detail.component';
+import { ClientsComponent } from './features/clients/pages/clients/clients.component';
+import { ClientDetailComponent } from './features/clients/pages/clients/client-detail/client-detail.component';
 
 export enum Route {
   Clients = 'clients',

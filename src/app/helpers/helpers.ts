@@ -1,4 +1,4 @@
-import { Order } from '../interfaces/order.interface';
+import { Order } from '../features/clients/types/order.interface';
 
 export function extractChartDataOrdersForMultipleProducts(orders: Order[]) {
   const myMap: any = {};
