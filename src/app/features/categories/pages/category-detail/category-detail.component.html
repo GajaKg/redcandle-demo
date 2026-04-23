@@ -1,7 +1,7 @@
 <div class="row grid gap-4">
   <app-card>
-    @if(category() && category().name) {
-    <h6 class="mb-2 text-xl font-bold">{{ category().name }}</h6>
+    @if(category() && category()!.name) {
+    <h6 class="mb-2 text-xl font-bold">{{ category()!.name }}</h6>
     }
     <p>Lista proizvoda koja pripadaju kategoriji:</p>
     <mat-list>
