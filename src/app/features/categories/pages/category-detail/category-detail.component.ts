@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   Signal,
@@ -18,6 +19,8 @@ import { CategoryDetailProductionComponent } from '../../components/category-det
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import { Category } from '@/features/categories/types/category.interface';
 import { Product } from '@/features/warehouse/types/product.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { distinctUntilChanged, map } from 'rxjs';
 
 @Component({
   selector: 'app-category-detail',
@@ -30,20 +33,25 @@ import { Product } from '@/features/warehouse/types/product.interface';
     RouterLink,
     CategoryDetailOrdersComponent,
     CategoryDetailProductionComponent
-],
+  ],
   templateUrl: './category-detail.component.html',
   styleUrl: './category-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryDetailComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly _productStore = inject(ProductsStore);
   private readonly route = inject(ActivatedRoute);
   protected categoryId = signal<number>(0);
 
   ngOnInit(): void {
-    this.route.params.subscribe((params: Params) => {
-      if (params['id']) {
-        this.categoryId.set(params['id']);
+    this.route.params.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map(params => params['id']),
+      distinctUntilChanged()
+    ).subscribe(id => {
+      if (id) {
+        this.categoryId.set(id);
       }
     });
   }

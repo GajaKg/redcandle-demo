@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   NgModule,
@@ -39,6 +40,8 @@ import { TitleCardComponent } from '@/core/components/shared/title-card/title-ca
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import { Product, Production } from '@/features/warehouse/types/product.interface';
 import { ProductOrdersComponent } from '@/features/warehouse/components/product-orders/product-orders.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -70,6 +73,7 @@ import { ProductOrdersComponent } from '@/features/warehouse/components/product-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailComponent implements OnInit, AfterViewInit {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
   private readonly productsStore = inject(ProductsStore);
   private readonly formBuilder = inject(FormBuilder);
@@ -95,7 +99,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     return this.productsStore.selectedProduct();
   });
 
-  protected readonly productionYears = computed(() => {
+  protected readonly productionYears = computed((): number[] => {
     if (!this.productsStore.selectedProduct()) return [];
     const copy = structuredClone(
       this.productsStore.selectedProduct()!.production
@@ -108,7 +112,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       const year = moonLanding.getFullYear();
       years.add(year);
     }
-    return Array.from(years).sort().reverse();
+    return Array.from(years).sort().reverse() as number[];
   });
 
   constructor() {
@@ -120,13 +124,17 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.initForm();
 
-    this.route.params.subscribe((params: Params) => {
-      this.productId = params['id'];
-      this.productsStore.setSelectedProductId(params['id']);
-
-      this.productsStore.getProductsOrders().subscribe(() => {
-        this.updatedCharts();
-      });
+    this.route.params.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      switchMap((params: Params) => {
+        const id = params['id'];
+        this.productId = id;
+        this.productsStore.setSelectedProductId(id);
+        return this.productsStore.getProductsOrders();
+      })
+    ).subscribe({
+      next: () => this.updatedCharts(),
+      error: (err) => console.error('Failed to load orders', err)
     });
   }
 

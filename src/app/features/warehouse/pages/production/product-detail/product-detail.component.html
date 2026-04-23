@@ -66,7 +66,7 @@
               <mat-form-field style="max-width: 170px">
                 <mat-label>Datum upisa</mat-label>
                 <input
-                  [(ngModel)]="(editElement()!.date)"
+                  [(ngModel)]="editElement()!.date"
                   matInput
                   [matDatepicker]="date"
                 />
@@ -111,7 +111,7 @@
                 <mat-icon class="text-red-700">cancel</mat-icon>
               </button>
               <button (click)="onEditProductionConfirmed()">
-                <mat-icon class="text-green-700">check_circle</mat-icon> 
+                <mat-icon class="text-green-700">check_circle</mat-icon>
               </button>
               } @else {
               <button (click)="onEditProduction(i, element)">

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   Signal,
@@ -24,12 +25,13 @@ import { OrdersChartYearlyComponent } from '@/features/clients/components/orders
 import { ClientsStore } from '@/features/clients/store/clients.store';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import Client from '@/features/clients/types/client.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
   selector: 'app-client-detail',
   standalone: true,
-   providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter()],
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -39,12 +41,13 @@ import Client from '@/features/clients/types/client.interface';
     OrdersChartYearlyComponent,
     ClientDetailOrderFormComponent,
     ClientDetailOrderListComponent
-],
+  ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientDetailComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
   private readonly clientStore = inject(ClientsStore);
   private readonly productStore = inject(ProductsStore);
@@ -57,11 +60,14 @@ export class ClientDetailComponent implements OnInit {
   public orders = computed(() => this.productStore.ordersBySelectedClient());
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      // this.selectedId = params['id'];
-      this.selectedId.set(params['id']);
-      this.clientStore.setSelectedClientId(params['id']);
-    });
+    this.route.params.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    )
+      .subscribe((params: Params) => {
+        // this.selectedId = params['id'];
+        this.selectedId.set(params['id']);
+        this.clientStore.setSelectedClientId(params['id']);
+      });
 
   }
 
