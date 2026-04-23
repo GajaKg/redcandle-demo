@@ -38,7 +38,7 @@
         <mat-form-field style="max-width: 130px">
           <mat-label>Količina {{ productQuantity() }}</mat-label>
           <input
-            [(ngModel)]="editOrder!().quantity"
+            [(ngModel)]="editOrder()!.quantity"
             matInput
             [max]="+productQuantity()"
             type="number"
@@ -64,11 +64,11 @@
         <mat-form-field style="max-width: 170px">
           <mat-label>Datum upisa</mat-label>
           <input
-            (ngModel)="editOrder().date"
-            [formControl]="editOrder().date"
+            [ngModel]="editOrder()!.date"
+            (ngModelChange)="updateDate($event)"
             matInput
             [matDatepicker]="date"
-            [max]="editOrder().dateDelivery.value"
+            [max]="editOrder()!.dateDelivery"
           />
           <mat-datepicker-toggle
             matIconSuffix
@@ -90,11 +90,11 @@
         <mat-form-field style="max-width: 170px">
           <mat-label>Datum dostave</mat-label>
           <input
-            (ngModel)="editOrder().dateDelivery"
-            [formControl]="editOrder().dateDelivery"
+            [ngModel]="editOrder()!.dateDelivery"
+            (ngModelChange)="updateDateDelivery($event)"
             matInput
             [matDatepicker]="dateDelivery"
-            [min]="editOrder().date.value"
+            [min]="editOrder()!.date"
           />
           <mat-datepicker-toggle
             matIconSuffix

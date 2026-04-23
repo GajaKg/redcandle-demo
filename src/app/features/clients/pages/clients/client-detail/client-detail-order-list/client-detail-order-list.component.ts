@@ -124,4 +124,18 @@ export class ClientDetailOrderListComponent {
   onCancel() {
     this.editOrder.set(undefined);
   }
+
+  updateDate(newDate: Date) {
+    const current = this.editOrder();
+    if (current) {
+      this.editOrder.set({ ...current, date: newDate });
+    }
+  }
+
+  updateDateDelivery(newDate: Date) {
+    const current = this.editOrder();
+    if (current) {
+      this.editOrder.set({ ...current, dateDelivery: newDate });
+    }
+  }
 }
