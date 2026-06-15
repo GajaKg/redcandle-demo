@@ -16,16 +16,16 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 import { provideNativeDateAdapter } from '@angular/material/core';
 
-import { ClientDetailOrderFormComponent } from "./client-detail-order-form/client-detail-order-form.component";
-import { ClientDetailOrderListComponent } from "./client-detail-order-list/client-detail-order-list.component";
-import { TitleCardComponent } from '@/core/components/shared/title-card/title-card.component';
-import { CardComponent } from '@/core/components/shared/card/card.component';
+import { ClientDetailOrderFormComponent } from "../../components/client-detail-order-form/client-detail-order-form.component";
+import { ClientDetailOrderListComponent } from "../../components/client-detail-order-list/client-detail-order-list.component";
+import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { OrdersChartMonthlyComponent } from '@/features/clients/components/orders/orders-chart-monthly/orders-chart-monthly.component';
 import { OrdersChartYearlyComponent } from '@/features/clients/components/orders/orders-chart-yearly/orders-chart-yearly.component';
 import { ClientsStore } from '@/features/clients/store/clients.store';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import Client from '@/features/clients/types/client.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CardComponent } from '@/shared/components/card/card.component';
 
 
 @Component({

@@ -10,7 +10,7 @@ import { tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import Client from '@/features/clients/types/client.interface';
-import { ClientService } from '../services/client.service';
+import { ClientService } from '@/features/clients/services/client.service';
 
 type ClientsState = {
   clients: Client[];
@@ -19,36 +19,7 @@ type ClientsState = {
 };
 
 const initialState: ClientsState = {
-  clients: [
-    // {
-    //   id: 1,
-    //   name: 'Konami',
-    //   address: 'Pere Bozica',
-    //   contact: '063 666 555',
-    //   note: 'Neka napomena',
-    // },
-    // {
-    //   id: 2,
-    //   name: 'Sony',
-    //   address: 'Dusana Kecmana 20',
-    //   contact: '064 888 76 69',
-    //   note: '',
-    // },
-    // {
-    //   id: 3,
-    //   name: 'Nitendo',
-    //   address: 'Milosa Teodosica 11',
-    //   contact: '034 784 777',
-    //   note: '',
-    // },
-    // {
-    //   id: 4,
-    //   name: 'xBox',
-    //   address: 'Bogdana Bogdanovica 104',
-    //   contact: '011 121 2 452',
-    //   note: '',
-    // },
-  ],
+  clients: [],
   isLoading: false,
   selectedClientId: null,
 };
@@ -78,6 +49,7 @@ export const ClientsStore = signalStore(
       },
       addClient(client: Client) {
         // patchState(store, { isLoading: true });
+
         patchState(store, (state) => ({
           clients: [...state.clients, client],
         }));

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import { ChartColumnComponent } from '@/core/components/shared/charts/chart-column/chart-column.component';
-import { ChipsComponent } from '@/core/components/shared/chips/chips.component';
+import { ChipsComponent } from '@/shared/components/chips/chips.component';
 import { Order } from '@/features/clients/types/order.interface';
-import { extractChartDataOrdersForMultipleProducts, extractChartDataOrdersForSingleProduct } from '@/helpers/helpers';
+import { extractChartDataOrdersForMultipleProducts, extractChartDataOrdersForSingleProduct } from '@/shared/helpers/helpers';
+import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
 
 @Component({
   selector: 'app-orders-chart-monthly',

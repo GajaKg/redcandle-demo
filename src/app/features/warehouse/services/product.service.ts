@@ -10,8 +10,10 @@ import { Observable } from 'rxjs';
 export class ProductService {
   private readonly http = inject(HttpClient)
 
+  private readonly url = "/products"
+
   fetchProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>('data/products.json');
+    return this.http.get<Product[]>(this.url);
   }
 
   fetchCategories(): Observable<Category[]> {

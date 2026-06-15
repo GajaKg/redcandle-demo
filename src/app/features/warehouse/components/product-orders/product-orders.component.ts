@@ -1,4 +1,4 @@
-import { TitleCardComponent } from '@/core/components/shared/title-card/title-card.component';
+import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { OrdersChartMonthlyComponent } from '@/features/clients/components/orders/orders-chart-monthly/orders-chart-monthly.component';
 import { OrdersChartYearlyComponent } from '@/features/clients/components/orders/orders-chart-yearly/orders-chart-yearly.component';
 import {

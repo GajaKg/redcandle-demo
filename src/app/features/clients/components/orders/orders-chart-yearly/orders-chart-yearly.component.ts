@@ -1,5 +1,4 @@
-import { ChartColumnComponent } from '@/core/components/shared/charts/chart-column/chart-column.component';
-import { extractChartDataOrdersYearlyForMultipleProducts } from '@/helpers/helpers';
+import { extractChartDataOrdersYearlyForMultipleProducts } from '@/shared/helpers/helpers';
 import { Order } from '@/features/clients/types/order.interface';
 import {
   ChangeDetectionStrategy,
@@ -7,6 +6,7 @@ import {
   computed,
   input,
 } from '@angular/core';
+import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
 
 @Component({
   selector: 'app-orders-chart-yearly',

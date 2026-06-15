@@ -7,9 +7,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class OrderService {
+  private readonly url = "/orders"
+
   constructor(private http: HttpClient) {}
 
   fetchOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>('data/orders.json');
+    return this.http.get<Order[]>(this.url);
   }
 }

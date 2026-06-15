@@ -10,12 +10,12 @@ import { MatListModule } from '@angular/material/list';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CardComponent } from '@/core/components/shared/card/card.component';
 import { ProductFormComponent } from '@/features/warehouse/components/product-form/product-form.component';
-import { TitleCardComponent } from '@/core/components/shared/title-card/title-card.component';
+import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import { Product } from '@/features/warehouse/types/product.interface';
 import { Route } from '@/app.routes';
+import { CardComponent } from '@/shared/components/card/card.component';
 
 
 

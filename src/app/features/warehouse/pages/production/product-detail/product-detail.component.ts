@@ -33,15 +33,15 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { ChartColumnComponent } from '@/core/components/shared/charts/chart-column/chart-column.component';
-import { CardComponent } from '@/core/components/shared/card/card.component';
-import { ChartPieComponent } from '@/core/components/shared/charts/chart-pie/chart-pie.component';
-import { TitleCardComponent } from '@/core/components/shared/title-card/title-card.component';
+import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import { Product, Production } from '@/features/warehouse/types/product.interface';
 import { ProductOrdersComponent } from '@/features/warehouse/components/product-orders/product-orders.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
+import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
+import { CardComponent } from '@/shared/components/card/card.component';
+import { ChartPieComponent } from '@/shared/components/charts/chart-pie/chart-pie.component';
 
 @Component({
   selector: 'app-product-detail',

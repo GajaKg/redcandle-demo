@@ -1,5 +1,4 @@
-import { ChartColumnComponent } from '@/core/components/shared/charts/chart-column/chart-column.component';
-import { TitleCardComponent } from '@/core/components/shared/title-card/title-card.component';
+import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { OrdersChartMonthlyComponent } from '@/features/clients/components/orders/orders-chart-monthly/orders-chart-monthly.component';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import { Order } from '@/features/clients/types/order.interface';
@@ -13,6 +12,7 @@ import {
 } from '@angular/core';
 
 import { MatChipsModule } from '@angular/material/chips';
+import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
 
 
 @Component({

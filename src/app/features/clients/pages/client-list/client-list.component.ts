@@ -17,16 +17,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 
-import { TitleCardComponent } from '@/core/components/shared/title-card/title-card.component';
-import { CardComponent } from '@/core/components/shared/card/card.component';
+import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { ClientFormComponent } from '../../components/client-form/client-form.component';
 import { ClientsStore } from '../../store/clients.store';
 import Client from '@/features/clients/types/client.interface';
 import { Route } from '@/app.routes';
+import { CardComponent } from '@/shared/components/card/card.component';
 
 
 @Component({
-  selector: 'app-clients',
+  selector: 'app-client-list',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -40,8 +40,8 @@ import { Route } from '@/app.routes';
     MatIconModule,
     MatInputModule,
   ],
-  templateUrl: './clients.component.html',
-  styleUrl: './clients.component.scss',
+  templateUrl: './client-list.component.html',
+  styleUrl: './client-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientsComponent implements AfterViewInit {

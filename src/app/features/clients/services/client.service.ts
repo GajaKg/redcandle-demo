@@ -7,9 +7,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ClientService {
-  constructor(private http: HttpClient) {}
+  private readonly url = "/customers"
+
+  constructor(private http: HttpClient) { }
 
   fetchClients(): Observable<Client[]> {
-    return this.http.get<Client[]>('data/clients.json');
+    return this.http.get<Client[]>(this.url);
+  }
+
+  add(client: Client): Observable<Client> {
+    return this.http.post<Client>(this.url + "/" + client.id, client);
   }
 }

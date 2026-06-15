@@ -3,8 +3,8 @@ import { ProductionComponent } from './features/warehouse/pages/production/produ
 import { ProductListComponent } from './features/warehouse/pages/production/product-list/product-list.component';
 import { ProductDetailComponent } from './features/warehouse/pages/production/product-detail/product-detail.component';
 import { CategoryDetailComponent } from './features/categories/pages/category-detail/category-detail.component';
-import { ClientsComponent } from './features/clients/pages/clients/clients.component';
-import { ClientDetailComponent } from './features/clients/pages/clients/client-detail/client-detail.component';
+import { ClientsComponent } from './features/clients/pages/client-list/client-list.component';
+import { ClientDetailComponent } from './features/clients/pages/client-detail/client-detail.component';
 
 export enum Route {
   Clients = 'clients',

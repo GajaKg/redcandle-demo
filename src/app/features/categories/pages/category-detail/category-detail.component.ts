@@ -12,8 +12,7 @@ import {
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 
-import { ActivatedRoute, Params, RouterLink } from '@angular/router';
-import { CardComponent } from '@/core/components/shared/card/card.component';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CategoryDetailOrdersComponent } from '../../components/category-detail-orders/category-detail-orders.component';
 import { CategoryDetailProductionComponent } from '../../components/category-detail-production/category-detail-production.component';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
@@ -21,6 +20,7 @@ import { Category } from '@/features/categories/types/category.interface';
 import { Product } from '@/features/warehouse/types/product.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
+import { CardComponent } from '@/shared/components/card/card.component';
 
 @Component({
   selector: 'app-category-detail',
