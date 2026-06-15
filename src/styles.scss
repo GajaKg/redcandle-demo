@@ -113,3 +113,22 @@ html {
     color: #0f5132 !important;
   }
 }
+.error {
+  // snack bar
+  --mdc-snackbar-container-color: #1a201d;
+  --mat-snack-bar-button-color: black;
+  --mdc-snackbar-supporting-text-color: #990730;
+  .mdc-snackbar__label {
+    color: #d60d0d;
+  }
+  .mdc-button__label {
+    color: #d60d0d !important;
+  }
+}
+
+// styles.scss
+// .mat-mdc-snack-bar-container {
+//   --mdc-snackbar-container-color: #000000; // black background
+//   --mdc-snackbar-supporting-text-color: #ff0000; // red text
+//   --mat-snack-bar-button-color: #ff0000; // action button red (if any)
+// }

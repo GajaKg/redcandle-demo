@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideExperimentalZonelessChangeDetection, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,6 +7,8 @@ import { provideStore } from '@ngrx/store';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiInterceptor } from '@/core/interceptors/api.interceptor';
+import { GlobalErrorHandler } from './core/services/global-error-handler.service';
+import { globalErrorInterceptor } from './core/interceptors/global-error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,8 +19,9 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     provideHttpClient(
-      withInterceptors([apiInterceptor]) // Register it here
-    )
+      withInterceptors([apiInterceptor, globalErrorInterceptor])
+    ),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // importProvidersFrom(
     //   StoreModule.forRoot({}),
     //   StoreModule.forFeature('product', productsReducer),
