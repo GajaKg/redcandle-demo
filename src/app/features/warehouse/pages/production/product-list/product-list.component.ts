@@ -1,4 +1,4 @@
-import { Component, computed, inject, ViewChild, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, ViewChild, effect, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,9 +13,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductFormComponent } from '@/features/warehouse/components/product-form/product-form.component';
 import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
-import { Product } from '@/features/warehouse/types/product.interface';
+import { Product, ProductEdit } from '@/features/warehouse/types/product.interface';
 import { Route } from '@/app.routes';
 import { CardComponent } from '@/shared/components/card/card.component';
+import { CategoriesStore } from '@/features/categories/store/categories.store';
 
 
 
@@ -42,9 +43,10 @@ import { CardComponent } from '@/shared/components/card/card.component';
   styleUrl: './product-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   // private readonly formBuilder = inject(FormBuilder);
-  private readonly storeProducts = inject(ProductsStore);
+  private readonly productsStore = inject(ProductsStore);
+  private readonly categoriesStore = inject(CategoriesStore);
   private readonly router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   protected displayedColumns: string[] = [
@@ -56,13 +58,13 @@ export class ProductListComponent {
     'actions',
   ];
 
-  protected readonly products = computed(() => this.storeProducts.products());
+  protected readonly products = computed(() => this.productsStore.products());
   protected readonly categories = computed(() =>
-    this.storeProducts.categories()
+    this.categoriesStore.categories()
   );
   public dataSource = new MatTableDataSource<Product>(this.products());
 
-  public editElement?: null | Product = null;
+  public editElement?: null | ProductEdit = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -72,6 +74,10 @@ export class ProductListComponent {
     });
   }
 
+  ngOnInit() {
+    this.productsStore.getProducts();
+    this.categoriesStore.getCategories();
+  }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
@@ -79,33 +85,39 @@ export class ProductListComponent {
   onSubmit(product: Partial<Product>) {
     const name = product.name || '';
     const reserved = product.reserved || 0;
-    const categoryId = product.categoryId || 0;
+    const categoryId = product.categoryId;
     const quantity = product.quantity || 0;
     const stockCapacity = product.stockCapacity || 0;
-    const id = this.products().length + 1;
 
-    this.storeProducts.addProduct({
-      id: id,
+    this.productsStore.addProduct({
       categoryId: categoryId,
       name: name,
       quantity: quantity,
       reserved: reserved,
       stockCapacity: stockCapacity,
-      production: [],
     });
   }
 
   onDeleteProduct(id: number) {
-    this.storeProducts.deleteProduct(id);
+    this.productsStore.deleteProduct(id);
   }
 
-  onEditProduct(product: Product) {
+  onEditProduct(product: ProductEdit) {
+
     this.editElement = { ...product };
   }
 
   onEditProductConfirmed() {
+    console.log("EDIT", this.editElement)
     if (this.editElement) {
-      this.storeProducts.editProduct(this.editElement);
+      this.productsStore.editProduct({
+        id: this.editElement.id,
+        categoryId: this.editElement.categoryId,
+        name: this.editElement.name,
+        quantity: this.editElement.quantity,
+        reserved: this.editElement.reserved,
+        stockCapacity: this.editElement.stockCapacity,
+      });
       this.editElement = null;
     }
   }

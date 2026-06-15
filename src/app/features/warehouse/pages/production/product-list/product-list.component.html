@@ -45,7 +45,7 @@
           <td mat-cell *matCellDef="let element">
             @if(element.id == editElement?.id) {
             <mat-form-field (click)="$event.stopPropagation()">
-              <mat-label>Izaberi kategoriju</mat-label>
+              <mat-label>Izaberi kategoriju (fix treba id kategorije)</mat-label>
               <mat-select
                 matNativeControl
                 required

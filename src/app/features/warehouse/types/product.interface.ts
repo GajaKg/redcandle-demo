@@ -6,10 +6,12 @@ export interface Production {
 export interface Product {
   id: number;
   name: string;
-  categoryId: number;
-  categoryName: string;
+  category: string;
+  categoryId?: number;
   quantity: number;
   stockCapacity: number;
   reserved: number,
   production: Production[] | []
 }
+
+export interface ProductEdit extends Omit<Product, "category" | "production"> { };

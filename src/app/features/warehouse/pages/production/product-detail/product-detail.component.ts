@@ -130,7 +130,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
         const id = params['id'];
         this.productId = id;
         this.productsStore.setSelectedProductId(id);
-        return this.productsStore.getProductsOrders();
+        return this.productsStore.getProducts();
       })
     ).subscribe({
       next: () => this.updatedCharts(),

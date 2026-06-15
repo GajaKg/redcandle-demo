@@ -1,6 +1,6 @@
 import { OrderService } from '@/features/clients/services/order.service';
 import { Order } from '@/features/clients/types/order.interface';
-import { Product } from '@/features/warehouse/types/product.interface';
+import { Product, ProductEdit } from '@/features/warehouse/types/product.interface';
 import { computed, inject } from '@angular/core';
 import {
   patchState,
@@ -9,11 +9,13 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { forkJoin, map, tap } from 'rxjs';
+import { first, firstValueFrom, forkJoin, lastValueFrom, map, tap } from 'rxjs';
 import { ProductService } from '../services/product.service';
 import { ClientsStore } from '@/features/clients/store/clients.store';
 import Client from '@/features/clients/types/client.interface';
 import { Category } from '@/features/categories/types/category.interface';
+import { SnackBarService } from '@/core/services/snackbar.service';
+import { CategoriesService } from '@/features/categories/services/categories.service';
 
 
 
@@ -40,92 +42,108 @@ export const ProductsStore = signalStore(
     (
       store,
       productService = inject(ProductService),
-      orderService = inject(OrderService),
-      clientStore = inject(ClientsStore)
+      categoriesService = inject(CategoriesService),
+      snackbarService = inject(SnackBarService),
     ) => ({
-      getProductsOrders() {
-        // proveri treba da postoji toSignal()
-        return forkJoin({
-          categories: productService.fetchCategories(),
-          products: productService.fetchProducts(),
-          orders: orderService.fetchOrders(),
-        }).pipe(
-          map(({ products, orders, categories }) => {
-            const ordersMapped = orders.map((order: Order) => {
-              const product = products.find(
-                (product: Product) => order.productId == product.id
-              );
-              const client = clientStore
-                .clients()
-                .find((client: Client) => order.clientId == client.id);
+      async getProducts() {
+        const products = await firstValueFrom(productService.fetchProducts());
+        const categories = await firstValueFrom(categoriesService.fetchCategories());
 
-              return {
-                ...order,
-                clientName: client?.name,
-                productName: product?.name,
-              };
-            });
-
-            const productsMapped = products.map((product: Product) => {
-              const category = categories.find(
-                (cat) => cat.id == product.categoryId
-              );
-              return {
-                ...product,
-                categoryName: category?.name,
-              };
-            });
-
-            return { productsMapped, ordersMapped, categories };
-          }),
-          tap(({ productsMapped, ordersMapped, categories }) => {
-            // @TODO remove after adding backend
-            if (store.products().length) return;
-            patchState(store, (state) => ({
-              products: [...productsMapped],
-            }));
-            patchState(store, (state) => ({
-              orders: [...ordersMapped],
-            }));
-            patchState(store, (state) => ({
-              categories: [...categories],
-            }));
-          })
-        );
-      },
-      addProduct(product: Partial<Product>) {
-        const category = store
-          .categories()
-          .find((cat) => cat.id == product.categoryId);
-        const productMapped = { ...product, categoryName: category?.name };
         patchState(store, (state) => ({
-          products: [productMapped, ...state.products],
+          products: [...products],
+          categories: [...categories],
+        }));
+        // proveri treba da postoji toSignal()
+        // return forkJoin({
+        //   categories: productService.fetchCategories(),
+        //   products: productService.fetchProducts(),
+        //   orders: orderService.fetchOrders(),
+        // }).pipe(
+        //   map(({ products, orders, categories }) => {
+        //     const ordersMapped = orders.map((order: Order) => {
+        //       const product = products.find(
+        //         (product: Product) => order.productId == product.id
+        //       );
+        //       const client = clientStore
+        //         .clients()
+        //         .find((client: Client) => order.clientId == client.id);
+
+        //       return {
+        //         ...order,
+        //         clientName: client?.name,
+        //         productName: product?.name,
+        //       };
+        //     });
+
+        //     const productsMapped = products.map((product: Product) => {
+        //       const category = categories.find(
+        //         (cat) => cat.id == product.categoryId
+        //       );
+        //       return {
+        //         ...product,
+        //         categoryName: category?.name,
+        //       };
+        //     });
+
+        //     return { productsMapped, ordersMapped, categories };
+        //   }),
+        //   tap(({ productsMapped, ordersMapped, categories }) => {
+        //     // @TODO remove after adding backend
+        //     if (store.products().length) return;
+        //     patchState(store, (state) => ({
+        //       products: [...productsMapped],
+        //     }));
+        //     patchState(store, (state) => ({
+        //       orders: [...ordersMapped],
+        //     }));
+        //     patchState(store, (state) => ({
+        //       categories: [...categories],
+        //     }));
+        //   })
+        // );
+      },
+      async addProduct(product: Partial<Product>) {
+        const response = await firstValueFrom(productService.post(product));
+        console.log(response)
+        patchState(store, (state) => ({
+          products: [...state.products, response],
         }));
         // patchState(store, { isLoading: false });
+        snackbarService.success();
       },
-      deleteProduct(id: number) {
+      async editProduct(product: ProductEdit) {
+        const response = await firstValueFrom(productService.put(product))
+
+        patchState(store, (state) => ({
+          products: state.products.map((productEl: Product) => {
+            return productEl.id === product.id
+              ? {
+                ...response,
+              }
+              : productEl;
+          }),
+        }));
+
+        snackbarService.success();
+      },
+      async deleteProduct(id: number) {
+        const response = await firstValueFrom(productService.delete(id));
+
         patchState(store, (state) => ({
           products: state.products.filter((productEl: Product) => {
             return productEl.id !== id;
           }),
         }));
-      },
-      editProduct(product: Product) {
-        patchState(store, (state) => ({
-          products: state.products.map((productEl: Product) => {
-            return productEl.id === product.id
-              ? {
-                  ...product,
-                }
-              : productEl;
-          }),
-        }));
+
+        snackbarService.success();
       },
       findProductById(id: number) {
         return store.products().find((product: Product) => +product.id === +id);
       },
       findProductsByCategoryId(id: number): Product[] {
-        return store.products().filter((product: Product) => +product.categoryId === +id);
+        // @TODO ovo treba da se sredi categoryId
+        // return store.products().filter((product: Product) => +product.categoryId === +id);
+        return store.products().filter((product: Product) => +product.id === +id);
       },
       setSelectedProductId(id: number) {
         patchState(store, { selectedProductId: id });
@@ -153,7 +171,7 @@ export const ProductsStore = signalStore(
         //@TODO remove after backend
         const p = this.findProductById(+order.productId!);
         patchState(store, (state) => ({
-          orders: [ { ...order, productName: p.name }, ...state.orders],
+          orders: [{ ...order, productName: p.name }, ...state.orders],
         }));
       },
       editOrder(
