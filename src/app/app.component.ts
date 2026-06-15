@@ -14,18 +14,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly storeProducts = inject(ProductsStore);
-  private readonly storeClients = inject(ClientsStore);
+  // private readonly destroyRef = inject(DestroyRef);
+  // private readonly storeProducts = inject(ProductsStore);
+  // private readonly storeClients = inject(ClientsStore);
   title = 'Red Candle Management';
 
 
   ngOnInit() {
     // this.storeProducts.getCateogries().subscribe();
-    this.storeProducts.getProductsOrders().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    )
-      .subscribe();
-    this.storeClients.getClients();
+    // this.storeProducts.getProductsOrders().pipe(
+    //   takeUntilDestroyed(this.destroyRef)
+    // )
+    //   .subscribe();
+    // this.storeClients.getClients();
   }
 }

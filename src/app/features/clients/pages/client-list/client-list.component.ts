@@ -5,6 +5,7 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -44,7 +45,7 @@ import { CardComponent } from '@/shared/components/card/card.component';
   styleUrl: './client-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClientsComponent implements AfterViewInit {
+export class ClientsComponent implements AfterViewInit, OnInit {
   private router = inject(Router);
   private storeClients = inject(ClientsStore);
 
@@ -65,9 +66,14 @@ export class ClientsComponent implements AfterViewInit {
   public editElement: Client | null = null;
 
   constructor() {
+    // throw new Error('This is a test error!');
     effect(() => {
       this.dataSource.data = this.clients();
     });
+  }
+
+  ngOnInit() {
+    this.storeClients.getClients();
   }
 
   ngAfterViewInit() {
@@ -75,10 +81,7 @@ export class ClientsComponent implements AfterViewInit {
   }
 
   onSubmit(client: Client) {
-    // const id = this.clients().length + randomIntFromInterval(10, 100);
-    // const id = this.clients().length + 1;
-    // const id: unique symbol = Symbol(client.name);
-    this.storeClients.addClient({ ...client });
+    this.storeClients.addClient(client);
   }
 
   onDeleteClient(id: number) {
