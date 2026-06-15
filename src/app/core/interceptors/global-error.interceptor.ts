@@ -3,6 +3,7 @@ import { inject } from "@angular/core";
 import { catchError, throwError } from "rxjs";
 import { Router } from "@angular/router";
 import { SnackBarService } from "@/core/services/snackbar.service";
+import { NoToastMessage } from "../constants/http.constants";
 
 
 
@@ -23,28 +24,30 @@ export const globalErrorInterceptor: HttpInterceptorFn = (req, next) => {
       else {
         switch (error.status) {
           case 400:
-            errorMessage = 'Bad Request.';
+            errorMessage = 'Neuspešno! Proverite podatke za unos ponovo.';
             break;
           case 401:
-            errorMessage = 'Unauthorized. Redirecting to login...';
-            _router.navigate(['/login']); // Auto-navigate on auth failure
+            // errorMessage = 'Unauthorized. Redirecting to login...';
+            // _router.navigate(['/login']); // Auto-navigate on auth failure
             break;
           case 403:
-            errorMessage = 'Forbidden. You do not have access.';
+            errorMessage = 'Zabranjeno. Nemate potrebna prava.';
             break;
           case 404:
-            errorMessage = 'Resource not found.';
+            errorMessage = 'Tražena stranica ne postoji.';
             break;
           case 500:
-            errorMessage = 'Internal Server Error. Please try again later.';
+            errorMessage = 'Neuspešno, molimo vas probajte kasnije.';
             break;
           default:
             errorMessage = `Server Error Code: ${error.status}\nMessage: ${error.message}`;
         }
       }
 
+      if (req.context.get(NoToastMessage) === true) {
+        _snackBar.error(errorMessage)
+      }
       // Log to console or external monitoring system
-      _snackBar.error(errorMessage)
       // console.error(errorMessage);
 
       // CRITICAL: Always rethrow the error so components can listen if needed

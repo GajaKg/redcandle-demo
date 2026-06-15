@@ -7,8 +7,7 @@ import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
 export class SnackBarService {
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _config: MatSnackBarConfig = {
-    //  panelClass: 'black-red-snackbar', // 👈 custom class
-    panelClass: 'success', // 👈 custom class
+    panelClass: 'success',
     verticalPosition: "top",
     horizontalPosition: "center",
     duration: 3000
