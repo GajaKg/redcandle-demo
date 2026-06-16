@@ -46,10 +46,12 @@
       }
     </mat-list>
   </app-card>
-  <app-card>
-    <!-- <app-category-detail-orders [categoryId]="categoryId()" /> -->
-  </app-card>
-  <app-card>
-    <!-- <app-category-detail-production [categoryId]="categoryId()" /> -->
-  </app-card>
+  @if(category()) {
+    <app-card>
+      <app-category-detail-orders [categoryId]="category()!.id" />
+    </app-card>
+    <app-card>
+      <app-category-detail-production [categoryId]="category()!.id" />
+    </app-card>
+  }
 </div>
