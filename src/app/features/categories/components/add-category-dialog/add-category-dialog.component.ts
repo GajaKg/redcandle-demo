@@ -39,10 +39,10 @@ export class AddCategoryDialogComponent implements OnInit {
       alert('Unesite tražene podatke');
       return;
     }
+
     this.categoriesStore.postCategory({
       name: this.form.controls['categoryName'].value
     } satisfies Partial<Category>)
-
   }
 
   initForm() {

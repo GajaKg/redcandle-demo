@@ -1,28 +1,55 @@
 <div class="row grid gap-4">
   <app-card>
-    @if(category() && category()!.name) {
-    <h6 class="mb-2 text-xl font-bold">{{ category()!.name }}</h6>
+    @if (category() && category()!.name) {
+      <h6 class="mb-2 text-xl font-bold">
+        @if (editCategoryName()) {
+          <mat-form-field class="mr-2">
+            <mat-label>Naziv kategorije</mat-label>
+            <input [(ngModel)]="categoryName" type="text" matInput />
+          </mat-form-field>
+
+          <button
+            (click)="editCategoryName.set(false); $event.stopPropagation()"
+            class="mr-2"
+          >
+            <mat-icon class="text-red-700">cancel</mat-icon>
+          </button>
+          <button (click)="onEditCategory(); $event.stopPropagation()">
+            <mat-icon class="text-green-700">check_circle</mat-icon>
+          </button>
+        } @else {
+          {{ category()?.name }}
+          <button
+            (click)="editCategoryName.set(true); $event.stopPropagation()"
+          >
+            <mat-icon class="text-green-700">edit</mat-icon>
+          </button>
+          <button (click)="onDeleteCategory(); $event.stopPropagation()">
+            <mat-icon class="text-red-700">delete</mat-icon>
+          </button>
+        }
+      </h6>
     }
     <p>Lista proizvoda koja pripadaju kategoriji:</p>
     <mat-list>
-      @for (product of productsByCategory(); track $index;) {
-      <mat-list-item>
-        <a
-          [routerLink]="['/production/product', product.id]"
-          class="inline-flex"
-          style="vertical-align: top"
-        >
-          {{ $index + 1 }}. {{ product.name }}
-          <mat-icon class="ml-2 text-green-700">read_more</mat-icon>
-        </a>
-      </mat-list-item>
+      @for (product of category()?.products; track $index) {
+        <mat-list-item>
+          <a
+            [routerLink]="['/production/product', product.id]"
+            class="inline-flex"
+            style="vertical-align: top"
+          >
+            {{ $index + 1 }}. {{ product.name }}
+            <mat-icon class="ml-2 text-green-700">read_more</mat-icon>
+          </a>
+        </mat-list-item>
       }
     </mat-list>
   </app-card>
   <app-card>
-    <app-category-detail-orders [categoryId]="categoryId()" />
+    <!-- <app-category-detail-orders [categoryId]="categoryId()" /> -->
   </app-card>
   <app-card>
-    <app-category-detail-production [categoryId]="categoryId()" />
+    <!-- <app-category-detail-production [categoryId]="categoryId()" /> -->
   </app-card>
 </div>
