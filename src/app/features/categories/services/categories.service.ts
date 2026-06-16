@@ -15,7 +15,7 @@ export class CategoriesService {
     return this.http.get<Category[]>(this.url);
   }
 
-  // delete(id: number): Observable<Category> {
-  //   return this.http.delete<Category>(this.url + "/" + id);
-  // }
+  post(category: Partial<Category>): Observable<Category> {
+    return this.http.post<Category>(this.url, category);
+  }
 }

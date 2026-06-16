@@ -7,6 +7,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
+import { MatDialog,  } from '@angular/material/dialog';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +18,7 @@ import { Product, ProductEdit } from '@/features/warehouse/types/product.interfa
 import { Route } from '@/app.routes';
 import { CardComponent } from '@/shared/components/card/card.component';
 import { CategoriesStore } from '@/features/categories/store/categories.store';
+import { AddCategoryDialogComponent } from '@/features/categories/components/add-category-dialog/add-category-dialog.component';
 
 
 
@@ -49,6 +51,8 @@ export class ProductListComponent implements OnInit {
   private readonly categoriesStore = inject(CategoriesStore);
   private readonly router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
+  readonly dialog = inject(MatDialog);
+
   protected displayedColumns: string[] = [
     'id',
     'product',
@@ -137,5 +141,13 @@ export class ProductListComponent implements OnInit {
       `${Route.Categories}/${Route.CategoryDetail}`,
       categoryId,
     ]);
+  }
+
+  openAddCategory() {
+    const dialogRef = this.dialog.open(AddCategoryDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

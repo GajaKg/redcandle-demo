@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Dodaj kategoriju</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Naziv kategorije</mat-label>
+      <input formControlName="categoryName" type="text" matInput />
+    </mat-form-field>
+    <!-- <button mat-flat-button type="submit">Potvrdi</button> -->
+    <button
+      matButton
+      [mat-dialog-close]="true"
+      cdkFocusInitial
+      class="ml-2 text-green-700"
+      type="submit"
+    >
+      <mat-icon class="text-green-700">check_circle</mat-icon>
+    </button>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close class="mr-4">odustani</button>
+  <!-- <button matButton mat-dialog-close class="mr-4">
+    <mat-icon>cancel</mat-icon>
+  </button> -->
+  <!-- <button matButton mat-dialog-close class="mr-4">
+    <mat-icon class="text-red-700">cancel</mat-icon>
+  </button>
+  <button
+    matButton
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    class="text-green-700"
+  >
+    <mat-icon class="text-green-700">check_circle</mat-icon>
+  </button> -->
+</mat-dialog-actions>

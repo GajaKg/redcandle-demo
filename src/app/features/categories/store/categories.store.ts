@@ -11,6 +11,7 @@ import { Product } from '@/features/warehouse/types/product.interface';
 import { Category } from '../types/category.interface';
 import { firstValueFrom } from 'rxjs';
 import { CategoriesService } from '../services/categories.service';
+import { SnackBarService } from '@/core/services/snackbar.service';
 
 type CategoriesState = {
   categories: Category[];
@@ -31,6 +32,7 @@ export const CategoriesStore = signalStore(
     (
       store,
       categoriesService = inject(CategoriesService),
+      snackbarService = inject(SnackBarService),
     ) => ({
       async getCategories() {
         const categories = await firstValueFrom(categoriesService.fetchCategories());
@@ -38,6 +40,15 @@ export const CategoriesStore = signalStore(
         patchState(store, (state) => ({
           categories: [...categories],
         }));
+      },
+      async postCategory(category: Partial<Category>) {
+        const response = await firstValueFrom(categoriesService.post(category));
+
+        patchState(store, (state) => ({
+          categories: [...state.categories, response],
+        }));
+
+        snackbarService.success();
       }
     })
   ),

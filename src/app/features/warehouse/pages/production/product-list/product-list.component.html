@@ -10,6 +10,7 @@
   </app-card>
   <app-card>
     <app-title-card>Lista kategorija</app-title-card>
+    <button matButton (click)="openAddCategory()">+ Dodaj kategoriju</button>
     <mat-list>
       @for (cat of categories(); track $index;) {
       <mat-list-item
