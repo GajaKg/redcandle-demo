@@ -53,11 +53,12 @@ export class ClientDetailComponent implements OnInit {
   private readonly productStore = inject(ProductsStore);
 
   protected selectedId = signal<number>(0);
-  protected selectedClient: Signal<Client | undefined> = computed(() =>
-    this.clientStore.getSelectedClient()
+
+  protected selectedClient: Signal<Client | null> = computed(() =>
+    this.clientStore.activeClient()
   );
 
-  public orders = computed(() => this.productStore.ordersBySelectedClient());
+  // public orders = computed(() => this.productStore.ordersBySelectedClient());
 
   ngOnInit() {
     this.route.params.pipe(
@@ -67,6 +68,7 @@ export class ClientDetailComponent implements OnInit {
         // this.selectedId = params['id'];
         this.selectedId.set(params['id']);
         this.clientStore.setSelectedClientId(params['id']);
+        this.clientStore.getClientById(params['id']);
       });
 
   }

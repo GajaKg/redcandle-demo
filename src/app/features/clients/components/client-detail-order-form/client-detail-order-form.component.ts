@@ -108,37 +108,37 @@ export class ClientDetailOrderFormComponent {
       return;
     }
 
-    const productId = +this.form.controls['product'].value;
-    const quantity = +this.form.controls['quantity'].value;
-    const paid = this.form.controls['paid'].value;
-    const date = this.form.controls['date'].value;
-    const dateDelivery = this.form.controls['dateDelivery'].value;
-    const delivered = this.form.controls['delivered'].value;
-    const note = this.form.controls['note'].value;
-    const categoryId = this.categoryId();
+    // const productId = +this.form.controls['product'].value;
+    // const quantity = +this.form.controls['quantity'].value;
+    // const paid = this.form.controls['paid'].value;
+    // const date = this.form.controls['date'].value;
+    // const dateDelivery = this.form.controls['dateDelivery'].value;
+    // const delivered = this.form.controls['delivered'].value;
+    // const note = this.form.controls['note'].value;
+    // const categoryId = this.categoryId();
 
-    this.productStore.addOrder({
-      // id: this.orders().length + randomIntFromInterval(10, 100),
-      id: 123,
-      clientId: +this.selectedId(),
-      productId,
-      categoryId,
-      quantity,
-      date,
-      paid,
-      dateDelivery,
-      delivered,
-      note,
-    });
+    // this.productStore.addOrder({
+    //   // id: this.orders().length + randomIntFromInterval(10, 100),
+    //   id: 123,
+    //   clientId: +this.selectedId(),
+    //   productId,
+    //   categoryId,
+    //   quantity,
+    //   date,
+    //   paid,
+    //   dateDelivery,
+    //   delivered,
+    //   note,
+    // });
 
-    this.snackBar.open('Uspešno uneta porudžbina!', 'ok', {
-      duration: 5000,
-      verticalPosition: 'top',
-      panelClass: ['success'],
-    });
+    // this.snackBar.open('Uspešno uneta porudžbina!', 'ok', {
+    //   duration: 5000,
+    //   verticalPosition: 'top',
+    //   panelClass: ['success'],
+    // });
 
-    this.form.reset();
-    this.productQuantity.set(0);
+    // this.form.reset();
+    // this.productQuantity.set(0);
   }
 
 

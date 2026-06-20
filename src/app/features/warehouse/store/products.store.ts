@@ -1,5 +1,4 @@
-import { OrderService } from '@/features/clients/services/order.service';
-import { Order } from '@/features/clients/types/order.interface';
+import { Order } from '@/features/orders/types/order.interface';
 import { Product, ProductEdit } from '@/features/warehouse/types/product.interface';
 import { computed, inject } from '@angular/core';
 import {
@@ -149,30 +148,30 @@ export const ProductsStore = signalStore(
         patchState(store, { selectedProductId: id });
       },
       addOrder(order: Partial<Order>) {
-        patchState(store, (state) => ({
-          products: state.products.map((product: Product) => {
-            if (product.id === order.productId) {
-              const quantity = order.delivered
-                ? product.quantity - (order.quantity || 0)
-                : product.quantity;
-              return {
-                ...product,
-                // productName: p.name,
-                quantity: quantity,
-              };
-            } else {
-              return {
-                ...product,
-                // productName: p.name,
-              };
-            }
-          }),
-        }));
-        //@TODO remove after backend
-        const p = this.findProductById(+order.productId!);
-        patchState(store, (state) => ({
-          orders: [{ ...order, productName: p.name }, ...state.orders],
-        }));
+        // patchState(store, (state) => ({
+        //   products: state.products.map((product: Product) => {
+        //     if (product.id === order.productId) {
+        //       const quantity = order.delivered
+        //         ? product.quantity - (order.quantity || 0)
+        //         : product.quantity;
+        //       return {
+        //         ...product,
+        //         // productName: p.name,
+        //         quantity: quantity,
+        //       };
+        //     } else {
+        //       return {
+        //         ...product,
+        //         // productName: p.name,
+        //       };
+        //     }
+        //   }),
+        // }));
+        // //@TODO remove after backend
+        // const p = this.findProductById(+order.productId!);
+        // patchState(store, (state) => ({
+        //   orders: [{ ...order, productName: p.name }, ...state.orders],
+        // }));
       },
       editOrder(
         order: Order,
@@ -180,75 +179,76 @@ export const ProductsStore = signalStore(
         orderDeliveredOldValue: boolean
       ) {
         //@TODO remove after backend
-        const p = this.findProductById(+order.productId!);
-        patchState(store, (state) => ({
-          orders: state.orders.map((orderEl: Order) => {
-            return orderEl.id === order.id ? { ...order, productName: p.name } : orderEl;
-          }),
-        }));
-        patchState(store, (state) => ({
-          products: state.products.map((product: Product) => {
-            if (product.id === order.productId) {
-              let reserved: number = !orderDeliveredOldValue
-                ? product.reserved - (order.quantity + orderEditDiffQuantity)
-                : product.reserved;
-              let quantity: number = product.quantity + orderEditDiffQuantity;
-
-              if (!order.delivered) {
-                reserved = orderDeliveredOldValue
-                  ? product.reserved + order.quantity
-                  : product.reserved - orderEditDiffQuantity;
-              }
-
-              return {
-                ...product,
-                reserved: reserved,
-                quantity: quantity,
-              };
-            } else {
-              return product;
-            }
-          }),
-        }));
-      },
-      deleteOrder(id: number) {
-        let foundProduct: Product | undefined;
-
-        const orders = store.orders().filter((orderEl: Order) => {
-          if (orderEl.id !== id) {
-            return true;
-          } else {
-            if (!orderEl.delivered) {
-              foundProduct = store
-                .products()
-                .find((product: Product) => product.id === orderEl.productId);
-
-              if (foundProduct) {
-                foundProduct.quantity += orderEl.quantity;
-                foundProduct.reserved -= orderEl.quantity;
-              }
-            }
-
-            return false;
-          }
-        });
-
-        patchState(store, (state) => ({
-          orders: orders,
-        }));
-
-        if (foundProduct) {
-          this.editProduct(foundProduct);
-        }
-
+        // const p = this.findProductById(+order.productId!);
         // patchState(store, (state) => ({
-        //   orders: state.orders.filter((orderEl: any) => {
-        //     return orderEl.id !== id;
+        //   orders: state.orders.map((orderEl: Order) => {
+        //     return orderEl.id === order.id ? { ...order, productName: p.name } : orderEl;
+        //   }),
+        // }));
+        // patchState(store, (state) => ({
+        //   products: state.products.map((product: Product) => {
+        //     if (product.id === order.productId) {
+        //       let reserved: number = !orderDeliveredOldValue
+        //         ? product.reserved - (order.quantity + orderEditDiffQuantity)
+        //         : product.reserved;
+        //       let quantity: number = product.quantity + orderEditDiffQuantity;
+
+        //       if (!order.delivered) {
+        //         reserved = orderDeliveredOldValue
+        //           ? product.reserved + order.quantity
+        //           : product.reserved - orderEditDiffQuantity;
+        //       }
+
+        //       return {
+        //         ...product,
+        //         reserved: reserved,
+        //         quantity: quantity,
+        //       };
+        //     } else {
+        //       return product;
+        //     }
         //   }),
         // }));
       },
+      deleteOrder(id: number) {
+        // let foundProduct: Product | undefined;
+
+        // const orders = store.orders().filter((orderEl: Order) => {
+        //   if (orderEl.id !== id) {
+        //     return true;
+        //   } else {
+        //     if (!orderEl.delivered) {
+        //       foundProduct = store
+        //         .products()
+        //         .find((product: Product) => product.id === orderEl.productId);
+
+        //       if (foundProduct) {
+        //         foundProduct.quantity += orderEl.quantity;
+        //         foundProduct.reserved -= orderEl.quantity;
+        //       }
+        //     }
+
+        //     return false;
+        //   }
+        // });
+
+        // patchState(store, (state) => ({
+        //   orders: orders,
+        // }));
+
+        // if (foundProduct) {
+        //   this.editProduct(foundProduct);
+        // }
+
+        // // patchState(store, (state) => ({
+        // //   orders: state.orders.filter((orderEl: any) => {
+        // //     return orderEl.id !== id;
+        // //   }),
+        // // }));
+      },
       findOrdersByCategoryId(id: number): Order[] {
-        return store.orders().filter((order: Order) => +order.categoryId === +id);
+        // return store.orders().filter((order: Order) => +order.categoryId === +id);
+        return []
       },
       findCategoryById(id: number): Category | undefined {
         return store.categories().find((category: Category) => +category.id === +id);
@@ -267,16 +267,16 @@ export const ProductsStore = signalStore(
       selectedProductOrders: computed(() => {
         return store
           .orders()
-          .filter(
-            (order: Order) => order.productId == store.selectedProductId()
-          );
+          // .filter(
+          //   (order: Order) => order.productId == store.selectedProductId()
+          // );
       }),
       ordersBySelectedClient: computed(() => {
         return store
           .orders()
-          .filter(
-            (order: Order) => order.clientId == clientStore.selectedClientId()
-          );
+          // .filter(
+          //   (order: Order) => order.clientId == clientStore.selectedClientId()
+          // );
       }),
     };
   })

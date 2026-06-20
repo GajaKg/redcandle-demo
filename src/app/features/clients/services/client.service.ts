@@ -3,6 +3,7 @@ import Client from '@/features/clients/types/client.interface';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Order } from '../../orders/types/order.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,4 +30,14 @@ export class ClientService {
   delete(id: number): Observable<any> {
     return this.http.delete<Client>(this.url + "/" + id);
   }
+
+  fetchClientById(id: number): Observable<Client>  {
+     return this.http.get<Client>(`${this.url}/${id}`);
+  }
+
+  // fetchOrdersByClientId(id: number): Observable<Order[]> {
+  //   return this.http.get<Order[]>(`${this.url}/${id}`, {
+  //     context: new HttpContext().set(NoToastMessage, true)
+  //   });
+  // }
 }

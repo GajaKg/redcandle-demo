@@ -11,7 +11,7 @@ import {
 
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Order } from '@/features/clients/types/order.interface';
+import { Order } from '@/features/orders/types/order.interface';
 import { ProductsStore } from '../../store/products.store';
 
 
@@ -46,11 +46,11 @@ export class ProductOrdersComponent {
       const date = new Date(order.date);
       const year = date.getFullYear();
 
-      if (o.hasOwnProperty(year)) {
-        o[year] += order.quantity;
-      } else {
-        o[year] = order.quantity;
-      }
+      // if (o.hasOwnProperty(year)) {
+      //   o[year] += order.quantity;
+      // } else {
+      //   o[year] = order.quantity;
+      // }
     });
 
     return o;

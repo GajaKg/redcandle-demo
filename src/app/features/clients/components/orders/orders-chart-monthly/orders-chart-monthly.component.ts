@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { ChipsComponent } from '@/shared/components/chips/chips.component';
-import { Order } from '@/features/clients/types/order.interface';
+import { Order } from '@/features/orders/types/order.interface';
 import { extractChartDataOrdersForMultipleProducts, extractChartDataOrdersForSingleProduct } from '@/shared/helpers/helpers';
 import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
 

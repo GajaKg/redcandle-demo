@@ -1,0 +1,363 @@
+
+
+
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { DatePipe } from '@angular/common';
+
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProductsStore } from '@/features/warehouse/store/products.store';
+import { Order } from '@/features/orders/types/order.interface';
+
+@Component({
+  selector: 'app-client-detail-order-list',
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatSlideToggleModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatIconModule,
+    MatSnackBarModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DatePipe
+  ],
+  templateUrl: './client-detail-order-list.component.html',
+  styleUrl: './client-detail-order-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ClientDetailOrderListComponent {
+  private readonly productStore = inject(ProductsStore);
+  orders = input.required<Order[]>();
+  // public orders = computed(() => this.productStore.ordersBySelectedClient());
+
+  dataSource = computed(() => new MatTableDataSource<Order>(this.orders()));
+  // public dataSource = new MatTableDataSource<Order[]>([]);
+  // Track the currently expanded order
+  // Instead of storing the order, store only its id
+  expandedId = signal<number | null>(null);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  protected columnsToDisplay: string[] = [
+    'id',
+    // 'clientId',
+    // 'clientName',
+    // 'productId',
+    // 'productName',
+    // 'prodName',
+    // 'name',
+    'date',
+    // 'dateDelivery',
+    'paid',
+    'delivered',
+    'note',
+    'expand',
+    'actions',
+  ];
+  // protected columnsToDisplayWithExpand = [];
+
+  protected orderDeliveredOldValue = signal<boolean>(false);
+  protected orderEditQuantity = signal<number>(0); // diff between old and new amount
+  protected selectedId = signal<number>(0);
+  protected productQuantity = signal<number>(0);
+  protected editOrder = signal<Order | undefined>(undefined);
+
+  // Toggle expand/collapse
+  toggleRow(order: Order): void {
+    // If already expanded, collapse; otherwise expand this order's id
+    this.expandedId.set(this.expandedId() === order.id ? null : order.id);
+  }
+
+  // Used in the template for the detail row condition
+  isExpanded = (index: number, row: Order): boolean => this.expandedId() === row.id;
+
+  onDeleteOrder(id: number) {
+    this.productStore.deleteOrder(id);
+  }
+
+  onEditOrder(order: Partial<Order>, i: number) {
+    // this.orderEditQuantity.set(order.quantity!);
+    // this.orderDeliveredOldValue.set(order.delivered!);
+    // const product = this.productStore.findProductById(order.productId!);
+
+    // const editedOrder: Order = {
+    //   id: order.id!,
+    //   clientId: order.clientId!,
+    //   clientName: order.clientName!,
+    //   productId: order.productId!,
+    //   categoryId: product?.categoryId ?? 0,
+    //   quantity: order.quantity!,
+    //   paid: order.paid ?? false,
+    //   date: new Date(order.date!),
+    //   dateDelivery: new Date(order.dateDelivery!),
+    //   delivered: order.delivered!,
+    //   note: order.note ?? '',
+    // };
+
+    // this.editOrder.set(editedOrder);
+    // this.productQuantity.set(
+    //   product ? +product.quantity + editedOrder.quantity : 0
+    // );
+  }
+
+  onEditOrderConfirmed() {
+    // const currentOrder = this.editOrder();
+    // if (!currentOrder) return;
+
+    // const orderDiff = this.orderEditQuantity() - currentOrder.quantity;
+
+    // if (currentOrder.quantity <= this.productQuantity()) {
+    //   this.productStore.editOrder(
+    //     currentOrder,
+    //     orderDiff,
+    //     this.orderDeliveredOldValue()
+    //   );
+    //   this.editOrder.set(undefined);
+    // } else {
+    //   alert('Nemate dovoljnu količinu u magacinu!');
+    // }
+  }
+
+  onCancel() {
+    this.editOrder.set(undefined);
+  }
+
+  updateDate(newDate: Date) {
+    const current = this.editOrder();
+    if (current) {
+      this.editOrder.set({ ...current, date: newDate });
+    }
+  }
+
+  updateDateDelivery(newDate: Date) {
+    // const current = this.editOrder();
+    // if (current) {
+    //   this.editOrder.set({ ...current, dateDelivery: newDate });
+    // }
+  }
+}
+
+
+
+
+<table mat-table [dataSource]="dataSource()">
+  <!-- # Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let element; let i = index" class="w-12">
+      {{ i + 1 }}.
+    </td>
+  </ng-container>
+
+  <!-- Product Column -->
+  <!-- <ng-container matColumnDef="clientName">
+          <th mat-header-cell *matHeaderCellDef>Klijent</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.clientName }}
+          </td>
+        </ng-container> -->
+
+  <!-- productName Column -->
+  <!-- <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Proizvod</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.name }}
+    </td>
+  </ng-container> -->
+  <!-- Amount Column -->
+  <!-- <ng-container matColumnDef="productId">
+          <th mat-header-cell *matHeaderCellDef>Proizvod</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.productId }}
+          </td>
+        </ng-container> -->
+
+  <!-- quantity Column -->
+  <!-- <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef>Količina</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field style="max-width: 130px">
+          <mat-label>Količina {{ productQuantity() }}</mat-label>
+          <input
+            [(ngModel)]="editOrder()!.quantity"
+            matInput
+            [max]="+productQuantity()"
+            type="number"
+          />
+          <mat-error class="text-red-800 text-xs">
+            Na stanju:
+            <strong class="text-red-800 text-xs">{{
+              productQuantity()
+            }}</strong>
+          </mat-error>
+        </mat-form-field>
+      } @else {
+        {{ element.quantity }}
+      }
+    </td>
+  </ng-container> -->
+
+  <!-- Date Column -->
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Datum upisa</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <!-- <mat-form-field style="max-width: 170px">
+          <mat-label>Datum upisa</mat-label>
+          <input
+            [ngModel]="editOrder()!.date"
+            (ngModelChange)="updateDate($event)"
+            matInput
+            [matDatepicker]="date"
+            /* [max]="editOrder()!.dateDelivery" */
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="date"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #date></mat-datepicker>
+        </mat-form-field> -->
+      } @else {
+        {{ element.date | date: "dd.MM.yyyy" }}
+      }
+    </td>
+  </ng-container>
+
+  <!-- dateDelivery Column -->
+  <!-- <ng-container matColumnDef="dateDelivery">
+    <th mat-header-cell *matHeaderCellDef>Datum dostave</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field style="max-width: 170px">
+          <mat-label>Datum dostave</mat-label>
+          <input
+            [ngModel]="editOrder()!.dateDelivery"
+            (ngModelChange)="updateDateDelivery($event)"
+            matInput
+            [matDatepicker]="dateDelivery"
+            [min]="editOrder()!.date"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="dateDelivery"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #dateDelivery></mat-datepicker>
+        </mat-form-field>
+      } @else {
+        {{ element.dateDelivery | date: "dd.MM.yyyy" }}
+      }
+    </td>
+  </ng-container> -->
+
+  <!-- paid Column -->
+  <ng-container matColumnDef="paid">
+    <th mat-header-cell *matHeaderCellDef>Plaćeno</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-slide-toggle [(ngModel)]="editOrder()!.paid" />
+      } @else {
+        <mat-icon [class]="element.paid ? 'text-green-700' : 'text-red-700'">
+          {{ element.paid ? "check_circle" : "cancel_circle" }}
+        </mat-icon>
+      }
+    </td>
+  </ng-container>
+
+  <!-- delivered Column -->
+  <ng-container matColumnDef="delivered">
+    <th mat-header-cell *matHeaderCellDef>Isporučeno</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-slide-toggle [(ngModel)]="editOrder()!.delivered" />
+      } @else {
+        <mat-icon
+          [class]="element.delivered ? 'text-green-700' : 'text-red-700'"
+        >
+          {{ element.delivered ? "check_circle" : "cancel_circle" }}
+        </mat-icon>
+      }
+    </td>
+  </ng-container>
+
+  <!-- Note Column -->
+  <ng-container matColumnDef="note">
+    <th mat-header-cell *matHeaderCellDef>Napomena</th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.id == editOrder()?.id) {
+        <mat-form-field (click)="$event.stopPropagation()">
+          <mat-label>Napomena</mat-label>
+          <input matInput [(ngModel)]="editOrder()!.note" />
+        </mat-form-field>
+      } @else {
+        {{ element.note }}
+      }
+    </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td
+      mat-cell
+      *matCellDef="let element; let i = index"
+      class="w-36 !text-right"
+    >
+      <div class="inline mr-8">
+        @if (element.id == editOrder()?.id) {
+          <button (click)="onCancel()" class="mr-2">
+            <mat-icon class="text-red-700">cancel</mat-icon>
+          </button>
+          <button (click)="onEditOrderConfirmed()">
+            <mat-icon class="text-green-700">check_circle</mat-icon>
+          </button>
+        } @else {
+          <button (click)="onEditOrder(element, i)">
+            <mat-icon class="text-green-700">edit</mat-icon>
+          </button>
+        }
+      </div>
+      <button (click)="onDeleteOrder(element.id)">
+        <mat-icon class="text-red-700">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+</table>
+
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+  aria-label="Select page of periodic elements"
+>
+</mat-paginator>

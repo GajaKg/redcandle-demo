@@ -1,7 +1,7 @@
 import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
 import { OrdersChartMonthlyComponent } from '@/features/clients/components/orders/orders-chart-monthly/orders-chart-monthly.component';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
-import { Order } from '@/features/clients/types/order.interface';
+import { Order } from '@/features/orders/types/order.interface';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -44,15 +44,15 @@ export class CategoryDetailOrdersComponent {
       const month = date.getMonth();
       // const month = date.toLocaleString('default', { month: 'short' });
 
-      if (o.hasOwnProperty(year)) {
-        if (o.hasOwnProperty(year)) {
-          o[year] += order.quantity;
-        } else {
-          o[year] = order.quantity;
-        }
-      } else {
-        o[year] = order.quantity;
-      }
+      // if (o.hasOwnProperty(year)) {
+      //   if (o.hasOwnProperty(year)) {
+      //     o[year] += order.quantity;
+      //   } else {
+      //     o[year] = order.quantity;
+      //   }
+      // } else {
+      //   o[year] = order.quantity;
+      // }
     });
 
     return o;

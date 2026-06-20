@@ -16,12 +16,14 @@ import { SnackBarService } from '@/core/services/snackbar.service';
 
 type ClientsState = {
   clients: Client[];
+  activeClient: Client | null;
   isLoading: boolean;
   selectedClientId: number | null;
 };
 
 const initialState: ClientsState = {
   clients: [],
+  activeClient: null,
   isLoading: false,
   selectedClientId: null,
 };
@@ -104,6 +106,11 @@ export const ClientsStore = signalStore(
       },
       setSelectedClientId(id: number) {
         patchState(store, { selectedClientId: id });
+      },
+      async getClientById(id: number) {
+        const client = await firstValueFrom(clientService.fetchClientById(id));
+
+        patchState(store, { activeClient: client });
       },
     })
   ),

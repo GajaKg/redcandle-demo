@@ -1,5 +1,5 @@
 import { extractChartDataOrdersYearlyForMultipleProducts } from '@/shared/helpers/helpers';
-import { Order } from '@/features/clients/types/order.interface';
+import { Order } from '@/features/orders/types/order.interface';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -41,14 +41,14 @@ export class OrdersChartYearlyComponent {
 
     const o: any = {};
     this.orders().forEach((order: Order) => {
-      const date = new Date(order.date);
-      const year = date.getFullYear();
+      // const date = new Date(order.date);
+      // const year = date.getFullYear();
 
-      if (o.hasOwnProperty(year)) {
-        o[year] += order.quantity;
-      } else {
-        o[year] = order.quantity;
-      }
+      // if (o.hasOwnProperty(year)) {
+      //   o[year] += order.quantity;
+      // } else {
+      //   o[year] = order.quantity;
+      // }
     });
     return o;
   });
