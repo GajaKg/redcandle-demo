@@ -4,6 +4,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Order } from '../../orders/types/order.interface';
+import { PagedResponse } from '@/core/types/response.types';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,8 @@ export class ClientService {
 
   constructor(private http: HttpClient) { }
 
-  fetchClients(): Observable<Client[]> {
-    return this.http.get<Client[]>(this.url, {
+  fetchClients(): Observable<PagedResponse<Client[]>> {
+    return this.http.get<PagedResponse<Client[]>>(this.url, {
       context: new HttpContext().set(NoToastMessage, true)
     });
   }
@@ -32,7 +33,7 @@ export class ClientService {
   }
 
   fetchClientById(id: number): Observable<Client>  {
-     return this.http.get<Client>(`${this.url}/${id}`);
+     return this.http.get<Client>(`${this.url}/${id}/orders`);
   }
 
   // fetchOrdersByClientId(id: number): Observable<Order[]> {

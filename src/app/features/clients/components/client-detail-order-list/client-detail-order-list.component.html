@@ -1,6 +1,6 @@
 <table
   mat-table
-  [dataSource]="dataSource()"
+  [dataSource]="dataSource"
   multiTemplateDataRows
   class="mat-elevation-z8 w-full"
 >
@@ -29,8 +29,8 @@
 
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>#</th>
-    <td mat-cell *matCellDef="let element; let i = index" class="w-12">
-      {{ i + 1 }}.
+    <td mat-cell *matCellDef="let element; let i = index"> {{i}}-
+       {{ (paginator.pageIndex || 0) * (paginator.pageSize || 0) + (i ?? 0) + 1 }}
     </td>
   </ng-container>
 
@@ -90,7 +90,7 @@
     </td>
   </ng-container>
 
-    <!-- Note Column -->
+  <!-- Note Column -->
   <ng-container matColumnDef="note">
     <th mat-header-cell *matHeaderCellDef>Napomena</th>
     <td mat-cell *matCellDef="let element">
@@ -102,22 +102,6 @@
       } @else {
         {{ element.note }}
       }
-    </td>
-  </ng-container>
-
-  <!-- Expand button column -->
-  <ng-container matColumnDef="expand">
-    <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
-    <td mat-cell *matCellDef="let element">
-      <button
-        mat-icon-button
-        aria-label="expand row"
-        (click)="toggle(element); $event.stopPropagation()"
-        class="example-toggle-button"
-        [class.example-toggle-button-expanded]="isExpanded(element)"
-      >
-        <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
     </td>
   </ng-container>
 
@@ -145,6 +129,22 @@
       </div>
       <button (click)="onDeleteOrder(element.id)">
         <mat-icon class="text-red-700">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Expand button column -->
+  <ng-container matColumnDef="expand">
+    <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+    <td mat-cell *matCellDef="let element">
+      <button
+        mat-icon-button
+        aria-label="expand row"
+        (click)="toggle(element); $event.stopPropagation()"
+        class="example-toggle-button"
+        [class.example-toggle-button-expanded]="isExpanded(element)"
+      >
+        <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
     </td>
   </ng-container>
@@ -214,3 +214,9 @@
     class="example-detail-row"
   ></tr>
 </table>
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+  aria-label="Select page of periodic elements"
+>
+</mat-paginator>

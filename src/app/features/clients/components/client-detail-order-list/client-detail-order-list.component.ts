@@ -1,10 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
+  effect,
   inject,
   input,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import { Order } from '@/features/orders/types/order.interface';
 import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-client-detail-order-list',
@@ -25,8 +27,9 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
     FormsModule,
     DatePipe,
     MatFormField,
-    MatLabel
-],
+    MatLabel,
+    MatPaginator
+  ],
   templateUrl: './client-detail-order-list.component.html',
   styleUrls: ['./client-detail-order-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,13 +37,14 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 export class ClientDetailOrderListComponent {
   private readonly productStore = inject(ProductsStore);
 
-  // Input: array of orders (required)
   orders = input.required<Order[]>();
 
   // DataSource computed from orders
-  dataSource = computed(() => new MatTableDataSource<Order>(this.orders()));
+  // dataSource = computed(() => new MatTableDataSource<Order>(this.orders()));
+  dataSource = new MatTableDataSource<Order>([]);
+  // dataSource = signal(new MatTableDataSource<Order>([]));
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // Track expanded order by ID
   expandedId = signal<number | null>(null);
 
   // Columns displayed in the main table
@@ -51,35 +55,42 @@ export class ClientDetailOrderListComponent {
     'delivered',
     'note',
     // 'expand',
-    // 'actions',
+    'actions',
   ];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
 
-  // Edit state
   editOrder = signal<Order | undefined>(undefined);
+
+  constructor() {
+    // Update dataSource.data whenever orders changes
+    effect(() => {
+      this.dataSource.data = this.orders();
+      // If you have sorting, also reset sort here if needed
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 
   // Toggle expansion
   toggle(order: Order): void {
     this.expandedId.set(this.expandedId() === order.id ? null : order.id);
   }
 
-  // Check if a row is expanded
   isExpanded(order: Order): boolean {
     return this.expandedId() === order.id;
   }
 
-  // ---- Actions (edit/delete) ----
   onDeleteOrder(id: number) {
     this.productStore.deleteOrder(id);
   }
 
   onEditOrder(order: Order, index: number) {
-    // placeholder – implement your edit logic
     console.log('Edit order', order);
   }
 
   onEditOrderConfirmed() {
-    // placeholder – confirm edit
   }
 
   onCancel() {

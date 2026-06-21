@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Client from '@/features/clients/types/client.interface';
 import { ClientService } from '@/features/clients/services/client.service';
 import { SnackBarService } from '@/core/services/snackbar.service';
+import { PagedResponse } from '@/core/types/response.types';
 
 type ClientsState = {
   clients: Client[];
@@ -44,9 +45,9 @@ export const ClientsStore = signalStore(
           .fetchClients()
           .pipe(
             takeUntilDestroyed(destroyRef),
-            tap((clients: Client[]) => {
+            tap((response: PagedResponse<Client[]>) => {
               patchState(store, (state) => ({
-                clients: [...clients],
+                clients: [...response.items],
               }));
             }),
           )

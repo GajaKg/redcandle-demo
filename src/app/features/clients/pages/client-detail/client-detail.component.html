@@ -28,7 +28,7 @@
   <app-card>
     <app-title-card>Lista porudžbenica</app-title-card>
     <div>
-      <app-client-detail-order-list [orders]="selectedClient()?.orders || []"/>
+      <app-client-detail-order-list [orders]="selectedClient()?.orders?.items || []"/>
     </div>
   </app-card>
 </div>
