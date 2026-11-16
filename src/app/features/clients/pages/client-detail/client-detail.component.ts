@@ -19,8 +19,8 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { ClientDetailOrderFormComponent } from "../../components/client-detail-order-form/client-detail-order-form.component";
 import { ClientDetailOrderListComponent } from "../../components/client-detail-order-list/client-detail-order-list.component";
 import { TitleCardComponent } from '@/shared/components/title-card/title-card.component';
-import { OrdersChartMonthlyComponent } from '@/features/clients/components/orders/orders-chart-monthly/orders-chart-monthly.component';
-import { OrdersChartYearlyComponent } from '@/features/clients/components/orders/orders-chart-yearly/orders-chart-yearly.component';
+// import { OrdersChartMonthlyComponent } from '@/features/clients/components/orders/orders-chart-monthly/orders-chart-monthly.component';
+// import { OrdersChartYearlyComponent } from '@/features/clients/components/orders/orders-chart-yearly/orders-chart-yearly.component';
 import { ClientsStore } from '@/features/clients/store/clients.store';
 import { ProductsStore } from '@/features/warehouse/store/products.store';
 import Client from '@/features/clients/types/client.interface';
@@ -36,8 +36,8 @@ import { CardComponent } from '@/shared/components/card/card.component';
         ReactiveFormsModule,
         CardComponent,
         TitleCardComponent,
-        OrdersChartMonthlyComponent,
-        OrdersChartYearlyComponent,
+        // OrdersChartMonthlyComponent,
+        // OrdersChartYearlyComponent,
         ClientDetailOrderFormComponent,
         ClientDetailOrderListComponent
     ],

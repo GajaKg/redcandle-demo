@@ -39,7 +39,7 @@
           formControlName="date"
           matInput
           [matDatepicker]="date"
-          [max]="form.get('dateDelivery')?.value"
+          [max]="$safeNavigationMigration(form.get('dateDelivery')?.value)"
         />
         <mat-datepicker-toggle
           matIconSuffix
@@ -53,7 +53,7 @@
           formControlName="dateDelivery"
           matInput
           [matDatepicker]="dateDelivery"
-          [min]="form.get('date')?.value"
+          [min]="$safeNavigationMigration(form.get('date')?.value)"
         />
         <mat-datepicker-toggle
           matIconSuffix

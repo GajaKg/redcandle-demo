@@ -1,9 +1,10 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, input, model, output, ChangeDetectionStrategy } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 @Component({
     selector: 'app-chips',
     imports: [MatChipsModule],
     templateUrl: './chips.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './chips.component.scss'
 })
 export class ChipsComponent {
