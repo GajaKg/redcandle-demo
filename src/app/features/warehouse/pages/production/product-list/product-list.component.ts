@@ -23,27 +23,26 @@ import { AddCategoryDialogComponent } from '@/features/categories/components/add
 
 
 @Component({
-  selector: 'app-product-list',
-  standalone: true,
-  imports: [
-    CardComponent,
-    ProductFormComponent,
-    FormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatListModule,
-    TitleCardComponent,
-    MatButtonModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    ProductFormComponent,
-  ],
-  templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-product-list',
+    imports: [
+        CardComponent,
+        ProductFormComponent,
+        FormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        MatListModule,
+        TitleCardComponent,
+        MatButtonModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        ProductFormComponent,
+    ],
+    templateUrl: './product-list.component.html',
+    styleUrl: './product-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductListComponent implements OnInit {
   // private readonly formBuilder = inject(FormBuilder);

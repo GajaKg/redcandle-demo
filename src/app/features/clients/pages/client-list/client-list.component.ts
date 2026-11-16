@@ -27,23 +27,22 @@ import { CardComponent } from '@/shared/components/card/card.component';
 
 
 @Component({
-  selector: 'app-client-list',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TitleCardComponent,
-    CardComponent,
-    ClientFormComponent,
-    MatTableModule,
-    MatPaginatorModule,
-    MatIconModule,
-    MatInputModule,
-  ],
-  templateUrl: './client-list.component.html',
-  styleUrl: './client-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-client-list',
+    imports: [
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TitleCardComponent,
+        CardComponent,
+        ClientFormComponent,
+        MatTableModule,
+        MatPaginatorModule,
+        MatIconModule,
+        MatInputModule,
+    ],
+    templateUrl: './client-list.component.html',
+    styleUrl: './client-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientsComponent implements AfterViewInit, OnInit {
   private router = inject(Router);

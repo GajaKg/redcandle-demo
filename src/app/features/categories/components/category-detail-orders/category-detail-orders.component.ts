@@ -16,17 +16,16 @@ import { ChartColumnComponent } from '@/shared/components/charts/chart-column/ch
 
 
 @Component({
-  selector: 'app-category-detail-orders',
-  standalone: true,
-  imports: [
-    TitleCardComponent,
-    ChartColumnComponent,
-    MatChipsModule,
-    OrdersChartMonthlyComponent
-],
-  templateUrl: './category-detail-orders.component.html',
-  styleUrl: './category-detail-orders.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-category-detail-orders',
+    imports: [
+        TitleCardComponent,
+        ChartColumnComponent,
+        MatChipsModule,
+        OrdersChartMonthlyComponent
+    ],
+    templateUrl: './category-detail-orders.component.html',
+    styleUrl: './category-detail-orders.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryDetailOrdersComponent {
   private readonly _productStore = inject(ProductsStore);

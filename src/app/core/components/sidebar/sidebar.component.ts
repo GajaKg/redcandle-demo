@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@ang
 import { ActivatedRoute, Router, RoutesRecognized, UrlSegment } from '@angular/router';
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [],
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-sidebar',
+    imports: [],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);

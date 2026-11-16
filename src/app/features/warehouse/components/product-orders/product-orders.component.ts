@@ -16,18 +16,17 @@ import { ProductsStore } from '../../store/products.store';
 
 
 @Component({
-  selector: 'app-product-orders',
-  standalone: true,
-  imports: [
-    TitleCardComponent,
-    MatChipsModule,
-    MatTabsModule,
-    OrdersChartMonthlyComponent,
-    OrdersChartYearlyComponent
-],
-  templateUrl: './product-orders.component.html',
-  styleUrl: './product-orders.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-product-orders',
+    imports: [
+        TitleCardComponent,
+        MatChipsModule,
+        MatTabsModule,
+        OrdersChartMonthlyComponent,
+        OrdersChartYearlyComponent
+    ],
+    templateUrl: './product-orders.component.html',
+    styleUrl: './product-orders.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductOrdersComponent {
   // private readonly route = inject(ActivatedRoute);

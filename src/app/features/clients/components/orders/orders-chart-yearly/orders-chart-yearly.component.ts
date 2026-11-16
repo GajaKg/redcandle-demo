@@ -9,12 +9,11 @@ import {
 import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
 
 @Component({
-  selector: 'app-orders-chart-yearly',
-  standalone: true,
-  imports: [ChartColumnComponent],
-  templateUrl: './orders-chart-yearly.component.html',
-  styleUrl: './orders-chart-yearly.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-orders-chart-yearly',
+    imports: [ChartColumnComponent],
+    templateUrl: './orders-chart-yearly.component.html',
+    styleUrl: './orders-chart-yearly.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrdersChartYearlyComponent {
   public orders = input<Order[]>([]);

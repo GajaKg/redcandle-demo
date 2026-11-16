@@ -22,19 +22,18 @@ import {
 import { ProductsStore } from '../../store/products.store';
 
 @Component({
-  selector: 'app-product-form',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule
-  ],
-  templateUrl: './product-form.component.html',
-  styleUrl: './product-form.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-product-form',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSelectModule
+    ],
+    templateUrl: './product-form.component.html',
+    styleUrl: './product-form.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductFormComponent {
   private readonly _productStore = inject(ProductsStore);

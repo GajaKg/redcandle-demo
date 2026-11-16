@@ -18,21 +18,20 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-client-detail-order-list',
-  standalone: true,
-  imports: [
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    FormsModule,
-    DatePipe,
-    MatFormField,
-    MatLabel,
-    MatPaginator
-  ],
-  templateUrl: './client-detail-order-list.component.html',
-  styleUrls: ['./client-detail-order-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-client-detail-order-list',
+    imports: [
+        MatTableModule,
+        MatIconModule,
+        MatButtonModule,
+        FormsModule,
+        DatePipe,
+        MatFormField,
+        MatLabel,
+        MatPaginator
+    ],
+    templateUrl: './client-detail-order-list.component.html',
+    styleUrls: ['./client-detail-order-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientDetailOrderListComponent {
   private readonly productStore = inject(ProductsStore);

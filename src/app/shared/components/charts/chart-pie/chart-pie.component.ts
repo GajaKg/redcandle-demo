@@ -3,12 +3,11 @@ import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { ChartOptionsPie } from '@/interfaces/chart.type';
 
 @Component({
-  selector: 'app-chart-pie',
-  standalone: true,
-  imports: [ChartBaseComponent],
-  templateUrl: './chart-pie.component.html',
-  styleUrl: './chart-pie.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-chart-pie',
+    imports: [ChartBaseComponent],
+    templateUrl: './chart-pie.component.html',
+    styleUrl: './chart-pie.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartPieComponent {
   public data = input<any>([]);

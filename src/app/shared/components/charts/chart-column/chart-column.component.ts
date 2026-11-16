@@ -5,12 +5,11 @@ import { chartColumnOptions } from '../chart-column-options';
 import { ChartOptionsColumn } from '@/interfaces/chart.type';
 
 @Component({
-  selector: 'app-chart-column',
-  standalone: true,
-  imports: [ChartBaseComponent],
-  templateUrl: './chart-column.component.html',
-  styleUrl: './chart-column.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-chart-column',
+    imports: [ChartBaseComponent],
+    templateUrl: './chart-column.component.html',
+    styleUrl: './chart-column.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartColumnComponent {
   public data = input<any>([]);

@@ -3,12 +3,11 @@ import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { ChartOptionsLine } from '@/interfaces/chart.type';
 
 @Component({
-  selector: 'app-chart-line',
-  standalone: true,
-  imports: [ChartBaseComponent],
-  templateUrl: './chart-line.component.html',
-  styleUrl: './chart-line.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-chart-line',
+    imports: [ChartBaseComponent],
+    templateUrl: './chart-line.component.html',
+    styleUrl: './chart-line.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartLineComponent {
   public data = input<any>([]);

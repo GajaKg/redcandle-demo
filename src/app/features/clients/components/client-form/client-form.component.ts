@@ -12,18 +12,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-client-form',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-  ],
-  templateUrl: './client-form.component.html',
-  styleUrl: './client-form.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-client-form',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+    ],
+    templateUrl: './client-form.component.html',
+    styleUrl: './client-form.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientFormComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);

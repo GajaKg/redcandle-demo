@@ -44,33 +44,32 @@ import { CardComponent } from '@/shared/components/card/card.component';
 import { ChartPieComponent } from '@/shared/components/charts/chart-pie/chart-pie.component';
 
 @Component({
-  selector: 'app-product-detail',
-  standalone: true,
-  imports: [
-    ProductOrdersComponent,
-    ChartColumnComponent,
-    CardComponent,
-    ChartPieComponent,
-    TitleCardComponent,
-    CardComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatIconModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    DatePipe,
-    MatChipsModule,
-    MatSnackBarModule,
-    FormsModule
-  ],
-  providers: [provideNativeDateAdapter()],
-  templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-product-detail',
+    imports: [
+        ProductOrdersComponent,
+        ChartColumnComponent,
+        CardComponent,
+        ChartPieComponent,
+        TitleCardComponent,
+        CardComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatIconModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        DatePipe,
+        MatChipsModule,
+        MatSnackBarModule,
+        FormsModule
+    ],
+    providers: [provideNativeDateAdapter()],
+    templateUrl: './product-detail.component.html',
+    styleUrl: './product-detail.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailComponent implements OnInit, AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);

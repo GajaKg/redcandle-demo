@@ -17,17 +17,16 @@ import { ChartColumnComponent } from '@/shared/components/charts/chart-column/ch
 
 
 @Component({
-  selector: 'app-category-detail-production',
-  standalone: true,
-  imports: [
-    TitleCardComponent,
-    ChartColumnComponent,
-    MatChipsModule,
-    ChipsComponent,
-  ],
-  templateUrl: './category-detail-production.component.html',
-  styleUrl: './category-detail-production.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-category-detail-production',
+    imports: [
+        TitleCardComponent,
+        ChartColumnComponent,
+        MatChipsModule,
+        ChipsComponent,
+    ],
+    templateUrl: './category-detail-production.component.html',
+    styleUrl: './category-detail-production.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryDetailProductionComponent {
   private readonly _productStore = inject(ProductsStore);

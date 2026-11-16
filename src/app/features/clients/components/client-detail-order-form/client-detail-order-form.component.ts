@@ -18,25 +18,24 @@ import { ProductsStore } from '@/features/warehouse/store/products.store';
 import Client from '@/features/clients/types/client.interface';
 
 @Component({
-  selector: 'app-client-detail-order-form',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatSlideToggleModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatIconModule,
-    MatSnackBarModule,
-  ],
-  templateUrl: './client-detail-order-form.component.html',
-  styleUrl: './client-detail-order-form.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-client-detail-order-form',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        MatButtonModule,
+        MatDatepickerModule,
+        MatSlideToggleModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatIconModule,
+        MatSnackBarModule,
+    ],
+    templateUrl: './client-detail-order-form.component.html',
+    styleUrl: './client-detail-order-form.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientDetailOrderFormComponent {
   private readonly formBuilder = inject(FormBuilder);

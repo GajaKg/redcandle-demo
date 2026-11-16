@@ -29,22 +29,21 @@ import { CardComponent } from '@/shared/components/card/card.component';
 
 
 @Component({
-  selector: 'app-client-detail',
-  standalone: true,
-  providers: [provideNativeDateAdapter()],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    CardComponent,
-    TitleCardComponent,
-    OrdersChartMonthlyComponent,
-    OrdersChartYearlyComponent,
-    ClientDetailOrderFormComponent,
-    ClientDetailOrderListComponent
-  ],
-  templateUrl: './client-detail.component.html',
-  styleUrl: './client-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-client-detail',
+    providers: [provideNativeDateAdapter()],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CardComponent,
+        TitleCardComponent,
+        OrdersChartMonthlyComponent,
+        OrdersChartYearlyComponent,
+        ClientDetailOrderFormComponent,
+        ClientDetailOrderListComponent
+    ],
+    templateUrl: './client-detail.component.html',
+    styleUrl: './client-detail.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientDetailComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);

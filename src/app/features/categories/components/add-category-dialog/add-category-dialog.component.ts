@@ -9,20 +9,19 @@ import { CategoriesStore } from "../../store/categories.store";
 import { Category } from "../../types/category.interface";
 
 @Component({
-  selector: 'app-add-category-dialog',
-  templateUrl: './add-category-dialog.component.html',
-  imports: [
-    MatDialogModule,
-    MatButtonModule,
-    MatIcon,
-    ReactiveFormsModule,
-    FormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel
-  ],
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-add-category-dialog',
+    templateUrl: './add-category-dialog.component.html',
+    imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatIcon,
+        ReactiveFormsModule,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        MatLabel
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddCategoryDialogComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);

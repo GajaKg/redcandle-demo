@@ -5,12 +5,11 @@ import { extractChartDataOrdersForMultipleProducts, extractChartDataOrdersForSin
 import { ChartColumnComponent } from '@/shared/components/charts/chart-column/chart-column.component';
 
 @Component({
-  selector: 'app-orders-chart-monthly',
-  standalone: true,
-  imports: [ChipsComponent, ChartColumnComponent],
-  templateUrl: './orders-chart-monthly.component.html',
-  styleUrl: './orders-chart-monthly.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-orders-chart-monthly',
+    imports: [ChipsComponent, ChartColumnComponent],
+    templateUrl: './orders-chart-monthly.component.html',
+    styleUrl: './orders-chart-monthly.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrdersChartMonthlyComponent {
   public orders = input<Order[]>([]);

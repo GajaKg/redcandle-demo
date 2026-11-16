@@ -31,24 +31,23 @@ import { RouterLink } from '@angular/router';
 
 
 @Component({
-  selector: 'app-category-detail',
-  standalone: true,
-  imports: [
-    CardComponent,
-    // TitleCardComponent,
-    FormsModule,
-    MatListModule,
-    MatIconModule,
-    CategoryDetailOrdersComponent,
-    CategoryDetailProductionComponent,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    RouterLink
-  ],
-  templateUrl: './category-detail.component.html',
-  styleUrl: './category-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-category-detail',
+    imports: [
+        CardComponent,
+        // TitleCardComponent,
+        FormsModule,
+        MatListModule,
+        MatIconModule,
+        CategoryDetailOrdersComponent,
+        CategoryDetailProductionComponent,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        RouterLink
+    ],
+    templateUrl: './category-detail.component.html',
+    styleUrl: './category-detail.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryDetailComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);

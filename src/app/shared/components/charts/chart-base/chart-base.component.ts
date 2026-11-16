@@ -6,12 +6,11 @@ import { ChartOptionsColumn, ChartOptionsLine, ChartOptionsPie } from '@/interfa
 
 
 @Component({
-  selector: 'app-chart-base',
-  standalone: true,
-  imports: [NgApexchartsModule],
-  templateUrl: './chart-base.component.html',
-  styleUrl: './chart-base.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-chart-base',
+    imports: [NgApexchartsModule],
+    templateUrl: './chart-base.component.html',
+    styleUrl: './chart-base.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartBaseComponent {
   public readonly options = input<ChartOptionsColumn | ChartOptionsPie | ChartOptionsLine | any>(
