@@ -15,6 +15,7 @@ import Client from '@/features/clients/types/client.interface';
 import { Category } from '@/features/categories/types/category.interface';
 import { SnackBarService } from '@/core/services/snackbar.service';
 import { CategoriesService } from '@/features/categories/services/categories.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 
@@ -44,7 +45,7 @@ export const ProductsStore = signalStore(
       categoriesService = inject(CategoriesService),
       snackbarService = inject(SnackBarService),
     ) => ({
-      async getProducts() {
+      async fetchProducts() {
         const products = await firstValueFrom(productService.fetchProducts());
         const categories = await firstValueFrom(categoriesService.fetchCategories());
 

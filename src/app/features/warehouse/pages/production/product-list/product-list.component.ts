@@ -79,7 +79,7 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productsStore.getProducts();
+    this.productsStore.fetchProducts();
     this.categoriesStore.getCategories();
   }
   ngAfterViewInit() {

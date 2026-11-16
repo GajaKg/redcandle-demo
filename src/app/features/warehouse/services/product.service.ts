@@ -1,5 +1,4 @@
 import { NoToastMessage } from '@/core/constants/http.constants';
-import { Category } from '@/features/categories/types/category.interface';
 import { Product, ProductEdit } from '@/features/warehouse/types/product.interface';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';

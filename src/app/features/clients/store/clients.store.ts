@@ -2,18 +2,17 @@ import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
 import { computed, DestroyRef, inject } from '@angular/core';
-import { debounceTime, distinctUntilChanged, firstValueFrom, lastValueFrom, pipe, switchMap, tap } from 'rxjs';
+import { firstValueFrom, lastValueFrom, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import Client from '@/features/clients/types/client.interface';
 import { ClientService } from '@/features/clients/services/client.service';
 import { SnackBarService } from '@/core/services/snackbar.service';
-import { PagedResponse } from '@/core/types/response.types';
+import { PagedResponse, Response } from '@/core/types/response.types';
 
 type ClientsState = {
   clients: Client[];
@@ -46,6 +45,7 @@ export const ClientsStore = signalStore(
           .pipe(
             takeUntilDestroyed(destroyRef),
             tap((response: PagedResponse<Client[]>) => {
+              console.log(response)
               patchState(store, (state) => ({
                 clients: [...response.items],
               }));

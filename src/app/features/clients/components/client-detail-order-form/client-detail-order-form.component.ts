@@ -58,6 +58,7 @@ export class ClientDetailOrderFormComponent {
   public allProducts = computed(() => this.productStore.products());
 
   ngOnInit() {
+    this.productStore.fetchProducts();
     this.initForm();
   }
 
